@@ -36,7 +36,7 @@ const virtualImages = []
 const virtualCollections = [
   { id:'01', title:'花 / FLOWERS', note:'一组以红色花朵、蝴蝶与占卜意象构成的虚拟肖像。2025.11.13', files: ['flower-01.jpg', 'flower-02.jpg', 'flower-03.jpg', 'flower-04.jpg'] },
   { id:'02', title:'少女暴君 / THE GIRL TYRANT', note:'一组关于甜美、权力与虚拟角色姿态的时装肖像。2026.01.17', files: ['tyrant-01.jpg', 'tyrant-02.jpg', 'tyrant-03.jpg', 'tyrant-04.jpg'] },
-  { id:'03', title:'III. OTHER WORLDS', note:'幻想世界、场景与数字环境的探索。', files: [] },
+  { id:'03', title:'毒 / POISON', note:'网、刺、荧光绿与柔软皮肤：一组关于吸引、束缚和危险欲望的虚拟肖像。', files: ['poison-01.jpg', 'poison-02.jpg', 'poison-03.jpg', 'poison-04.jpg', 'poison-05.jpg'] },
   { id:'04', title:'IV. LIGHT STUDIES', note:'光线、色彩与人物情绪的实验。', files: [] },
 ]
 
