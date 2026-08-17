@@ -203,7 +203,7 @@ function App() {
     <section className={aboutRevealed ? 'about page-width is-revealed' : 'about page-width'} id="about">
       <div className="section-tag"><span>( 01 )</span><span>ABOUT / PROFILE</span></div>
       <div className="about__grid">
-        <a className="portrait" href="#about-profile" aria-label="查看简卓凡个人简介" onPointerMove={movePortrait} onPointerLeave={dropPortrait}><img className="portrait__acid" src="/assets/about/Vector.png" alt="" /><img className="portrait__slab" src="/assets/about/Vector-1.png" alt="" /><div className="portrait__shape" /><p>JIAN<br />ZHUOFAN</p><span className="portrait__ring">✳</span><small>WHO I AM ↗</small></a>
+        <a className="portrait" href="#about-profile" aria-label="查看简卓凡个人简介" onPointerMove={movePortrait} onPointerLeave={dropPortrait}><img className="portrait__acid" src="/assets/about/Vector.png" alt="" /><img className="portrait__slab" src="/assets/about/Vector-1.png" alt="" /><div className="portrait__shape" /><p>JIAN<br />ZHUOFAN</p><small>WHO I AM ↗</small></a>
         <div className="about__content">
           <p className="about__kicker">EMERGING VISUAL STORYTELLER / 2027 GRADUATE</p>
           <h2><BouncyText text="影像、文化与" /><br /><strong><BouncyText text="观看方式。" /></strong></h2>
