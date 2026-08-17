@@ -175,11 +175,9 @@ function App() {
     <section className={isRushing ? 'hero hero--mountain is-rushing' : 'hero hero--mountain'} id="top" onPointerEnter={() => setOverHero(true)} onPointerLeave={() => { setOverHero(false); setIsRushing(false) }} onPointerDown={() => setIsRushing(true)} onPointerUp={() => setIsRushing(false)} onPointerCancel={() => setIsRushing(false)}>
       <div className="mountain-scene" aria-hidden="true">
         <svg className="wind wind--far" viewBox="0 0 1600 500" preserveAspectRatio="none"><path d="M-110 92C230 46 600 119 900 64c300-55 500 18 730-18"/><path d="M-90 157c310-46 610 18 910-28 250-38 500 17 810-11"/><path d="M-50 213c230-38 530 18 830-28 250-38 500 17 850-11"/></svg>
-        <svg className="mountain mountain--back" viewBox="0 0 3200 920" preserveAspectRatio="none"><path d="M0 920V450c80-78 160-219 260-313C340 74 400 168 480 231c70-63 150-173 250-220 80-47 130 63 210 126 70-63 130-126 200-94 70 31 130-16 200 15 60 31 120 78 180 47 30-16 50 31 60 63v652Z"/><path transform="translate(1600 0)" d="M0 920V450c80-78 160-219 260-313C340 74 400 168 480 231c70-63 150-173 250-220 80-47 130 63 210 126 70-63 130-126 200-94 70 31 130-16 200 15 60 31 120 78 180 47 30-16 50 31 60 63v652Z"/></svg>
-        <svg className="mountain mountain--front" viewBox="0 0 3200 920" preserveAspectRatio="none">
-          <path d="m-150 946 21-417C-25 458 103 293 237 205c104-71 168 46 265 108 105-90 221-198 332-231 102-33 157 65 234 126 83-53 166-106 244-64 58 41 116 82 157 65l-41 816Z"/>
-          <path transform="translate(1600 0)" d="m-150 946 21-417C-25 458 103 293 237 205c104-71 168 46 265 108 105-90 221-198 332-231 102-33 157 65 234 126 83-53 166-106 244-64 58 41 116 82 157 65l-41 816Z"/>
-        </svg>
+        <img className="mountain mountain--far" src="/assets/hero/mountain-far.png" alt="" />
+        <img className="mountain mountain--mid" src="/assets/hero/mountain-mid.png" alt="" />
+        <img className="mountain mountain--shadow" src="/assets/hero/mountain-shadow.png" alt="" />
         <div className="acid-disc" />
         <div className="hero__vignette" />
       </div>
