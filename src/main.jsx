@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import ScrollExpand from './components/ScrollExpand'
 import AccordionGallery from './components/AccordionGallery'
+import Ferrofluid from './components/Ferrofluid'
+import RippleDistortion from './components/RippleDistortion'
 import './style.css'
 
 const projects = [
@@ -69,7 +71,10 @@ function CasePage({ project }) {
 
 function ArtworkPage({ file, collection }) { return <main className="detail-page artwork-page"><header><a className="brand" href="#top">J.Z</a><a className="page-back" href="#gallery/virtual-photography">← BACK TO ARCHIVE</a></header><section className="artwork-stage"><img src={`/assets/virtual/${file}`} alt="Virtual Photography 展览作品"/></section><section className="artwork-text"><p>{collection?.title || 'VIRTUAL PHOTOGRAPHY'}</p><h1>[ WORK TITLE ]</h1><div><b>WORK INTRODUCTION</b><p>[ 在此补充作品简介：角色、造型、场景与创作时间。]</p></div><div><b>SPIRIT / READING</b><p>[ 在此补充精神分析：这件作品所讨论的身份、凝视、情绪或叙事。]</p></div></section></main> }
 
+function ErosionPage({ collection }) { const source = `/assets/virtual/${collection.files[0]}`; return <main className="detail-page erosion-page"><header><a className="brand" href="#top">J.Z</a><a className="page-back" href="#gallery/virtual-photography">← BACK TO VIRTUAL PHOTOGRAPHY</a></header><section className="erosion-stage"><Ferrofluid className="erosion-stage__fluid" /><div className="erosion-stage__info"><span>( 05 / VIRTUAL PHOTOGRAPHY )</span><h1>蚀<br /><em>EROSION.</em></h1><p>MOVE THE CURSOR<br />TO DISTURB THE SURFACE</p></div><div className="erosion-stage__art"><RippleDistortion src={source} /></div></section><section className="artwork-text"><p>EROSION / 05</p><h1>蚀</h1><div><b>WORK INTRODUCTION</b><p>关于人、消融与被侵蚀：无路可退时，被迫或主动加入这场灾难。</p></div><div><b>SPIRIT / READING</b><p>银色遍布世界的每个地方。灾难不再只是远处的景观，而成为每个人必须回应的邀请——你也要加入吗？</p></div></section></main> }
+
 function SeriesPage({ collection }) {
+  if (collection.id === '05') return <ErosionPage collection={collection} />
   const isFlowers = collection.id === '01'
   if (isFlowers) {
     const flowerFiles = ['flower-03.jpg', 'flower-01.jpg', 'flower-02.jpg', 'flower-04.jpg']
