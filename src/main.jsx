@@ -89,7 +89,7 @@ function SeriesPage({ collection }) {
   return <main className="detail-page artwork-page"><header><a className="brand" href="#top">J.Z</a><a className="page-back" href="#gallery/virtual-photography">← BACK TO VIRTUAL PHOTOGRAPHY</a></header><section className="gallery-head"><p>( VIRTUAL PHOTOGRAPHY / SERIES {collection.id} )</p><h1>{collection.title}</h1><span>{collection.note}</span></section><section className="series-works">{collection.files.length ? collection.files.map((file) => <img key={file} loading="lazy" src={`/assets/virtual/${file}`} alt={`${collection.title} 组图`} />) : <><div>[ 上传本系列组图 01 ]</div><div>[ 上传本系列组图 02 ]</div><div>[ 上传本系列组图 03 ]</div></>}</section><section className="artwork-text"><p>SERIES {collection.id}</p><h1>[ SERIES INTRODUCTION ]</h1><div><b>ABOUT THE SERIES</b><p>[ 在此补充这一组作品的创作背景、角色、场景与时间。]</p></div><div><b>SPIRIT / READING</b><p>[ 在此补充系列的精神分析、叙事线索与想讨论的问题。]</p></div></section></main>
 }
 
-function TravelLandscapePage({ area }) { const [selected, setSelected] = useState(null); const groups = [{ no:'01', title:'CITY DRIFT / 城市漂流', note:'街道、建筑、夜色与人在城市中的移动。', images:[{ src:'/assets/travel/city-drift-03.jpg', alt:'东京街道的傍晚人流' },{ src:'/assets/travel/city-drift-04.jpg', alt:'东京街角与放学后的队伍' },{ src:'/assets/travel/city-drift-01.jpg', alt:'函馆街道的夜色' },{ src:'/assets/travel/city-drift-02.jpg', alt:'京都街道与远处的城市天际线' }] },{ no:'02', title:'MOUNTAIN LINE / 山的轮廓', note:'远景、地形与行进途中被切开的地平线。' },{ no:'03', title:'WATER EDGE / 水的边界', note:'海、湖、雨与潮汐留下的反光和距离。' },{ no:'04', title:'PASSING DAYS / 经过的日常', note:'旅行之外，仍在发生的光线、天气与片刻。' }]; useEffect(() => { const close = event => event.key === 'Escape' && setSelected(null); window.addEventListener('keydown', close); return () => window.removeEventListener('keydown', close) }, []); return <main className="detail-page travel-page"><header><a className="brand" href="#top">J.Z</a><PageBack /></header><section className="gallery-head"><p>( PHOTOGRAPHY ARCHIVE )</p><h1>{area.title}</h1><span>{area.text}</span></section><section className="travel-groups">{groups.map((group) => <article className="travel-group" key={group.no}><header><span>{group.no}</span><h2>{group.title}</h2><p>{group.note}</p></header><div className="travel-group__images">{group.images ? group.images.map((image, index) => <button className="travel-photo" type="button" key={image.src} onClick={() => setSelected(image)} aria-label={`查看图片：${image.alt}`}><img src={image.src} alt={image.alt} /><span>{group.no} / {String(index + 1).padStart(2, '0')}</span><b>VIEW DETAIL ↗</b></button>) : Array.from({ length: 3 }, (_, index) => <figure key={index}><span>{group.no} / {String(index + 1).padStart(2, '0')}</span><b>[ UPLOAD TRAVEL IMAGE ]</b></figure>)}</div></article>)}</section>{selected ? <div className="travel-lightbox" role="dialog" aria-modal="true" aria-label="图片详情" onClick={() => setSelected(null)}><button type="button" className="travel-lightbox__close" onClick={() => setSelected(null)} aria-label="关闭图片详情">×</button><img src={selected.src} alt={selected.alt} onClick={event => event.stopPropagation()} /><p>{selected.alt}</p></div> : null}</main> }
+function TravelLandscapePage({ area }) { const [selected, setSelected] = useState(null); const groups = [{ no:'01', title:'CITY DRIFT / 城市漂流', note:'街道、建筑、夜色与人在城市中的移动。', images:[{ src:'/assets/travel/city-drift-03.jpg', alt:'东京街道的傍晚人流' },{ src:'/assets/travel/city-drift-04.jpg', alt:'东京街角与放学后的队伍' },{ src:'/assets/travel/city-drift-01.jpg', alt:'函馆街道的夜色' },{ src:'/assets/travel/city-drift-02.jpg', alt:'京都街道与远处的城市天际线' }] },{ no:'02', title:'MOUNTAIN LINE / 山的轮廓', note:'远景、地形与行进途中被切开的地平线。' },{ no:'03', title:'WATER EDGE / 水的边界', note:'海、湖、雨与潮汐留下的反光和距离。', images:[{ src:'/assets/travel/water-edge-01.jpg', alt:'蓝色海面与云层的倒影' },{ src:'/assets/travel/water-edge-02.jpg', alt:'海岸浅浪与沙滩' }] },{ no:'04', title:'PASSING DAYS / 经过的日常', note:'旅行之外，仍在发生的光线、天气与片刻。' }]; useEffect(() => { const close = event => event.key === 'Escape' && setSelected(null); window.addEventListener('keydown', close); return () => window.removeEventListener('keydown', close) }, []); return <main className="detail-page travel-page"><header><a className="brand" href="#top">J.Z</a><PageBack /></header><section className="gallery-head"><p>( PHOTOGRAPHY ARCHIVE )</p><h1>{area.title}</h1><span>{area.text}</span></section><section className="travel-groups">{groups.map((group) => <article className="travel-group" key={group.no}><header><span>{group.no}</span><h2>{group.title}</h2><p>{group.note}</p></header><div className="travel-group__images">{group.images ? group.images.map((image, index) => <button className="travel-photo" type="button" key={image.src} onClick={() => setSelected(image)} aria-label={`查看图片：${image.alt}`}><img src={image.src} alt={image.alt} /><span>{group.no} / {String(index + 1).padStart(2, '0')}</span><b>VIEW DETAIL ↗</b></button>) : Array.from({ length: 3 }, (_, index) => <figure key={index}><span>{group.no} / {String(index + 1).padStart(2, '0')}</span><b>[ UPLOAD TRAVEL IMAGE ]</b></figure>)}</div></article>)}</section>{selected ? <div className="travel-lightbox" role="dialog" aria-modal="true" aria-label="图片详情" onClick={() => setSelected(null)}><button type="button" className="travel-lightbox__close" onClick={() => setSelected(null)} aria-label="关闭图片详情">×</button><img src={selected.src} alt={selected.alt} onClick={event => event.stopPropagation()} /><p>{selected.alt}</p></div> : null}</main> }
 
 function GalleryPage({ area }) { const isVirtual = area.id === 'virtual-photography'; if (area.id === 'travel-landscape') return <TravelLandscapePage area={area} />; return <main className="detail-page"><header><a className="brand" href="#top">J.Z</a><PageBack /></header><section className="gallery-head"><p>( PHOTOGRAPHY ARCHIVE )</p><h1>{area.title}</h1><span>{area.text}</span></section>{isVirtual ? <section className="series-directory">{virtualCollections.map((collection) => <a href={`#series/${collection.id}`} key={collection.id}><span>{collection.id}</span><h2>{collection.title}</h2><p>{collection.note}</p><b>ENTER SERIES ↗</b></a>)}</section> : <section className="gallery-grid">{Array.from({ length: 8 }, (_, index) => <figure key={index}><div><span>{String(index + 1).padStart(2, '0')}</span><b>[ UPLOAD IMAGE ]</b></div><figcaption>{index === 0 ? area.status : '[ 添加作品标题 / 时间 / 简介 ]'}</figcaption></figure>)}</section>}</main> }
 
@@ -118,15 +118,47 @@ function App() {
     return () => observer.disconnect()
   }, [route])
   useEffect(() => {
-    const about = document.querySelector('#about')
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setAboutRevealed(true); observer.disconnect() }
-    }, { threshold: .16 })
-    if (about) observer.observe(about)
-    return () => observer.disconnect()
+    const homeRoutes = ['', '#top', '#about', '#work', '#photo', '#proof', '#contact']
+    if (!homeRoutes.includes(route)) return undefined
+    setAboutRevealed(false)
+    let observer
+    let fallback
+    const frame = window.requestAnimationFrame(() => {
+      const about = document.querySelector('#about')
+      if (!about) return
+      const reveal = () => setAboutRevealed(true)
+      if (route === '#about') { reveal(); return }
+      observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) { reveal(); observer.disconnect() }
+      }, { threshold: .01 })
+      observer.observe(about)
+      fallback = window.setTimeout(() => {
+        const rect = about.getBoundingClientRect()
+        if (rect.top < window.innerHeight && rect.bottom > 0) reveal()
+      }, 180)
+    })
+    return () => { window.cancelAnimationFrame(frame); window.clearTimeout(fallback); observer?.disconnect() }
+  }, [route])
+  useEffect(() => {
+    const changeRoute = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+      setRoute(window.location.hash)
+    }
+    window.addEventListener('hashchange', changeRoute)
+    window.addEventListener('pageshow', changeRoute)
+    window.addEventListener('popstate', changeRoute)
+    return () => { window.removeEventListener('hashchange', changeRoute); window.removeEventListener('pageshow', changeRoute); window.removeEventListener('popstate', changeRoute) }
   }, [])
-  useEffect(() => { const changeRoute = () => setRoute(window.location.hash); window.addEventListener('hashchange', changeRoute); window.addEventListener('pageshow', changeRoute); return () => { window.removeEventListener('hashchange', changeRoute); window.removeEventListener('pageshow', changeRoute) } }, [])
-  useEffect(() => { const timer = window.setTimeout(() => { if (route === '#top' || !route) window.scrollTo({ top: 0, behavior: 'auto' }); else if (['#about', '#work', '#photo', '#proof', '#contact'].includes(route)) document.querySelector(route)?.scrollIntoView({ block: 'start' }) }, 0); return () => window.clearTimeout(timer) }, [route])
+  useEffect(() => {
+    const homeSections = ['#about', '#work', '#photo', '#proof', '#contact']
+    const timer = window.setTimeout(() => {
+      if (homeSections.includes(route)) document.querySelector(route)?.scrollIntoView({ block: 'start', behavior: 'auto' })
+      else window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    }, homeSections.includes(route) ? 0 : 32)
+    return () => window.clearTimeout(timer)
+  }, [route])
 
   const moveGraphic = (event) => {
     const rect = event.currentTarget.getBoundingClientRect()
