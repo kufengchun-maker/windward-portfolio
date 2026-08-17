@@ -108,7 +108,7 @@ function App() {
     updateHero(); window.addEventListener('scroll', updateHero, { passive: true })
     return () => window.removeEventListener('scroll', updateHero)
   }, [])
-  useEffect(() => { const move = (event) => { setCursor({ x: event.clientX, y: event.clientY }); const target = document.elementFromPoint(event.clientX, event.clientY); setOverImage(Boolean(target?.closest('.portrait,.project__art,.photo-area,.lab-collage,.case-material,.gallery-grid figure,.series-works img,.artwork-stage img'))) }; window.addEventListener('pointermove', move); return () => window.removeEventListener('pointermove', move) }, [])
+  useEffect(() => { const move = (event) => { setCursor({ x: event.clientX, y: event.clientY }); const target = document.elementFromPoint(event.clientX, event.clientY); setOverImage(Boolean(target?.closest('.portrait,.project__art,.photo-area,.lab-collage,.case-material,.gallery-grid figure,.series-works img,.artwork-stage img,.flower-carousel__expand'))) }; window.addEventListener('pointermove', move); return () => window.removeEventListener('pointermove', move) }, [])
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
       if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target) }
