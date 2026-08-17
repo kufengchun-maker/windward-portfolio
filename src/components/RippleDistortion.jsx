@@ -24,6 +24,7 @@ export default function RippleDistortion({
     let width = 1
     let height = 1
     let last = { x: -9999, y: -9999 }
+    let lastPaint = 0
 
     const cover = () => {
       if (!image.naturalWidth) return
@@ -50,9 +51,19 @@ export default function RippleDistortion({
         frame = requestAnimationFrame(draw)
         return
       }
-      const tile = Math.max(3, Math.round(Math.min(width, height) / 110))
+      // Limit distortion to 30fps; when no ripple is active, the image is one GPU-friendly draw.
+      if (time - lastPaint < 33) { frame = requestAnimationFrame(draw); return }
+      lastPaint = time
       ctx.clearRect(0, 0, width, height)
       ctx.filter = grayscale ? 'grayscale(1)' : 'none'
+      while (ripples.length && time - ripples[0].time > 2150) ripples.shift()
+      if (!ripples.length) {
+        ctx.drawImage(buffer, 0, 0)
+        ctx.filter = 'none'
+        frame = requestAnimationFrame(draw)
+        return
+      }
+      const tile = Math.max(7, Math.round(Math.min(width, height) / 72))
 
       for (let y = 0; y < height; y += tile) {
         for (let x = 0; x < width; x += tile) {
@@ -77,7 +88,6 @@ export default function RippleDistortion({
         }
       }
       ctx.filter = 'none'
-      while (ripples.length && time - ripples[0].time > 2150) ripples.shift()
       frame = requestAnimationFrame(draw)
     }
 
