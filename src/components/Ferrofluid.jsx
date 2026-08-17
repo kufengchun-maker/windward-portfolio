@@ -1,101 +1,29 @@
 import { useEffect, useRef } from 'react'
 import './Ferrofluid.css'
 
-export default function Ferrofluid({
-  colors = ['#ffffff', '#ffffff', '#ffffff'],
-  speed = 0.4,
-  scale = 1.9,
-  turbulence = 0.8,
-  fluidity = 0.09,
-  rimWidth = 0.4,
-  sharpness = 1,
-  shimmer = 2,
-  glow = 1.8,
-  flowDirection = 'down',
-  opacity = 1,
-  mouseInteraction = true,
-  mouseStrength = 1,
-  mouseRadius = 0.3,
-  className = ''
-}) {
+const hexToRgb = hex => { const c = hex.replace('#', '').padEnd(6, '0'); return [parseInt(c.slice(0, 2), 16) / 255, parseInt(c.slice(2, 4), 16) / 255, parseInt(c.slice(4, 6), 16) / 255] }
+const flowVector = direction => ({ up: [0, 1], left: [-1, 0], right: [1, 0], down: [0, -1] }[direction] || [0, -1])
+const vertexShader = 'attribute vec2 position; attribute vec2 uv; varying vec2 vUv; void main(){vUv=uv;gl_Position=vec4(position,0.,1.);}'
+const fragmentShader = 'precision highp float;uniform vec3 iResolution;uniform vec2 iMouse;uniform float iTime;uniform vec3 uColor;uniform vec2 uFlow;uniform float uSpeed;uniform float uScale;uniform float uTurbulence;uniform float uFluidity;uniform float uRimWidth;uniform float uSharpness;uniform float uShimmer;uniform float uGlow;uniform float uOpacity;uniform float uMouseEnabled;uniform float uMouseStrength;uniform float uMouseRadius;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+1.),f.x),f.y);}float fbm(vec2 p){float v=0.;v+=n(p)*.5;p=p*2.03+11.;v+=n(p)*.25;p=p*2.01+5.;v+=n(p)*.125;return v/.875;}void main(){float ref=7./max(uScale,.05);vec2 p=vUv*iResolution.xy/iResolution.y*ref;float t=iTime*uSpeed;vec2 d=uFlow,perp=vec2(-d.y,d.x);float a=fbm(p+perp*t*1.8+d*t*.7);float b=fbm(p-perp*t*1.1-d*t*.6+5.);float field=mix(a,b,.5+sin((a-b)*6.)*.18);float mouseGlow=0.;if(uMouseEnabled>.5){vec2 m=iMouse/iResolution.y*ref;float dist=length(p-m)/ref;mouseGlow=exp(-dist*dist/max(.0001,uMouseRadius*uMouseRadius))*uMouseStrength;}float edge=abs(fract(field*3.+uTurbulence)-.5)*2.;float rim=smoothstep(1.-uRimWidth,1.,1.-edge);rim=pow(rim,max(.1,uSharpness))*uGlow;rim*=1.+mouseGlow*.35;rim*=1.-n(p*80.+t)*uShimmer*.16;vec3 col=uColor*rim;gl_FragColor=vec4(col,clamp(max(col.r,max(col.g,col.b))*uOpacity,0.,1.));}'
+
+const compile = (gl, type, source) => { const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader)); return shader }
+
+export default function Ferrofluid({ className = '', dpr, paused = false, colors = ['#fff', '#fff', '#fff'], backgroundColor = '#151518', speed = .4, scale = 1.9, turbulence = .8, fluidity = .09, rimWidth = .4, sharpness = 1, shimmer = 2, glow = 1.8, flowDirection = 'down', opacity = 1, mouseInteraction = true, mouseStrength = 1, mouseRadius = .3, mouseDampening = .15, mixBlendMode }) {
   const ref = useRef(null)
-
   useEffect(() => {
-    const canvas = ref.current
-    const ctx = canvas.getContext('2d')
-    let frame = 0
-    let lastPaint = 0
-    let pointer = { x: -9999, y: -9999 }
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect()
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.25)
-      canvas.width = Math.max(1, Math.round(rect.width * dpr))
-      canvas.height = Math.max(1, Math.round(rect.height * dpr))
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    }
-
-    const draw = time => {
-      // The image ripple layer also animates, so keep this ambient background at 30 fps.
-      if (time - lastPaint < 33) { frame = requestAnimationFrame(draw); return }
-      lastPaint = time
-      const { width, height } = canvas.getBoundingClientRect()
-      const size = Math.min(width, height)
-      const flow = time * speed * .00012
-      const direction = flowDirection === 'down' ? 1 : -1
-      ctx.clearRect(0, 0, width, height)
-      ctx.globalAlpha = opacity
-      ctx.fillStyle = '#151518'
-      ctx.fillRect(0, 0, width, height)
-      ctx.globalCompositeOperation = 'screen'
-
-      for (let index = 0; index < 6; index += 1) {
-        const seed = index * 1.71
-        const xDrift = Math.sin(flow * (1.7 + fluidity * 5) + seed) * size * .11 * turbulence
-        const yDrift = Math.cos(flow * (1.15 + fluidity * 4) + seed) * size * .065 * turbulence + direction * ((flow * size * 1.55 + index * height / 5) % (height * 1.35)) - height * .16
-        const pull = .012 + mouseRadius * .043
-        const x = width * (.13 + (index % 3) * .33) + xDrift + (mouseInteraction ? (pointer.x - width / 2) * pull * mouseStrength : 0)
-        const y = yDrift + (mouseInteraction ? (pointer.y - height / 2) * pull * mouseStrength : 0)
-        const radius = size * (.18 + (index % 2) * .07) * scale * .5
-        const color = colors[index % colors.length]
-        const gradient = ctx.createRadialGradient(x, y, radius * Math.max(.08, rimWidth * .18), x, y, radius)
-        gradient.addColorStop(0, `${color}00`)
-        gradient.addColorStop(Math.max(.12, .54 - sharpness * .14), `${color}${Math.round(16 * glow).toString(16).padStart(2, '0')}`)
-        gradient.addColorStop(.74, `${color}${Math.round(28 * glow).toString(16).padStart(2, '0')}`)
-        gradient.addColorStop(1, `${color}00`)
-        ctx.fillStyle = gradient
-        ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill()
-      }
-
-      ctx.globalCompositeOperation = 'source-over'
-      ctx.globalAlpha = Math.min(.5, .055 * shimmer)
-      ctx.strokeStyle = colors[0]
-      ctx.lineWidth = Math.max(1, sharpness)
-      for (let line = 0; line < 8; line += 1) {
-        ctx.beginPath()
-        const offset = line * (height / 7) + direction * flow * size * .16
-        for (let x = -20; x <= width + 20; x += 32) {
-          const y = (offset + Math.sin(x * .016 + flow * 8 + line) * (9 + turbulence * 14) + height * 2) % (height * 1.15) - height * .06
-          x === -20 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
-        }
-        ctx.stroke()
-      }
-      ctx.globalAlpha = 1
-      frame = requestAnimationFrame(draw)
-    }
-
-    const move = event => {
-      if (!mouseInteraction) return
-      const rect = canvas.getBoundingClientRect()
-      pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top }
-    }
-    const observer = new ResizeObserver(resize)
-    observer.observe(canvas)
-    resize()
-    canvas.addEventListener('pointermove', move)
-    frame = requestAnimationFrame(draw)
-    return () => { cancelAnimationFrame(frame); observer.disconnect(); canvas.removeEventListener('pointermove', move) }
-  }, [colors, speed, scale, turbulence, fluidity, rimWidth, sharpness, shimmer, glow, flowDirection, opacity, mouseInteraction, mouseStrength, mouseRadius])
-
-  return <canvas ref={ref} className={`ferrofluid-container ${className}`} aria-hidden="true" />
+    const container = ref.current; const canvas = document.createElement('canvas'); const gl = canvas.getContext('webgl', { alpha: true, antialias: false, powerPreference: 'low-power' })
+    if (!gl) return undefined
+    container.appendChild(canvas); canvas.style.cssText = 'display:block;width:100%;height:100%'
+    let program; let frame = 0; let previous = 0
+    try { program = gl.createProgram(); gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, vertexShader)); gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, fragmentShader)); gl.linkProgram(program); if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program)) } catch (error) { console.warn('Ferrofluid shader unavailable', error); canvas.remove(); return undefined }
+    gl.useProgram(program)
+    const quad = new Float32Array([-1,-1,0,0,3,-1,2,0,-1,3,0,2]); const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW)
+    ;[['position',2,0],['uv',2,8]].forEach(([name,size,offset]) => { const loc=gl.getAttribLocation(program,name); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,size,gl.FLOAT,false,16,offset) })
+    const loc = name => gl.getUniformLocation(program, name); const locations = Object.fromEntries(['iResolution','iMouse','iTime','uColor','uFlow','uSpeed','uScale','uTurbulence','uFluidity','uRimWidth','uSharpness','uShimmer','uGlow','uOpacity','uMouseEnabled','uMouseStrength','uMouseRadius'].map(name => [name,loc(name)]))
+    const rgb = hexToRgb(colors[0] || '#fff'); gl.uniform3fv(locations.uColor,rgb); gl.uniform2fv(locations.uFlow,flowVector(flowDirection)); gl.uniform1f(locations.uSpeed,speed); gl.uniform1f(locations.uScale,scale); gl.uniform1f(locations.uTurbulence,turbulence); gl.uniform1f(locations.uFluidity,fluidity); gl.uniform1f(locations.uRimWidth,rimWidth); gl.uniform1f(locations.uSharpness,sharpness); gl.uniform1f(locations.uShimmer,shimmer); gl.uniform1f(locations.uGlow,glow); gl.uniform1f(locations.uOpacity,opacity); gl.uniform1f(locations.uMouseEnabled,mouseInteraction?1:0); gl.uniform1f(locations.uMouseStrength,mouseStrength); gl.uniform1f(locations.uMouseRadius,mouseRadius)
+    const target=[0,0], mouse=[0,0]; const resize=()=>{const r=container.getBoundingClientRect();const ratio=dpr??Math.min(window.devicePixelRatio||1,1.5);canvas.width=Math.max(1,Math.round(r.width*ratio));canvas.height=Math.max(1,Math.round(r.height*ratio));gl.viewport(0,0,canvas.width,canvas.height);gl.uniform3f(locations.iResolution,canvas.width,canvas.height,1)}; const move=e=>{const r=canvas.getBoundingClientRect(),ratio=canvas.width/r.width;target[0]=(e.clientX-r.left)*ratio;target[1]=(r.height-(e.clientY-r.top))*ratio}; const render=time=>{frame=requestAnimationFrame(render);const dt=previous?(time-previous)/1000:0;previous=time;const f=mouseDampening<=0?1:1-Math.exp(-dt/Math.max(.0001,mouseDampening));mouse[0]+=(target[0]-mouse[0])*f;mouse[1]+=(target[1]-mouse[1])*f;if(paused)return;gl.uniform1f(locations.iTime,time*.001);gl.uniform2fv(locations.iMouse,mouse);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,3)}
+    const observer=new ResizeObserver(resize);observer.observe(container);resize();if(mouseInteraction)canvas.addEventListener('pointermove',move);frame=requestAnimationFrame(render)
+    return ()=>{cancelAnimationFrame(frame);observer.disconnect();canvas.removeEventListener('pointermove',move);gl.deleteBuffer(buffer);gl.deleteProgram(program);canvas.remove()}
+  },[dpr,paused,colors,speed,scale,turbulence,fluidity,rimWidth,sharpness,shimmer,glow,flowDirection,opacity,mouseInteraction,mouseStrength,mouseRadius,mouseDampening])
+  return <div ref={ref} className={`ferrofluid-container ${className}`} style={{ background: backgroundColor, ...(mixBlendMode && { mixBlendMode }) }} aria-hidden="true" />
 }

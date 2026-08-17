@@ -1,119 +1,35 @@
 import { useEffect, useRef } from 'react'
 import './RippleDistortion.css'
 
-// JS + CSS implementation following the React Bits public API.
-export default function RippleDistortion({
-  src,
-  brushSize = 150,
-  strength = 0.2,
-  swirl = 1,
-  rings = 4,
-  grayscale = false,
-  className = ''
-}) {
+// Deliberately lightweight canvas version for the exhibition image layer.
+export default function RippleDistortion({ src, brushSize = 150, strength = .2, swirl = 1, rings = 4, grayscale = false, className = '' }) {
   const ref = useRef(null)
-
   useEffect(() => {
-    const canvas = ref.current
-    const ctx = canvas.getContext('2d')
-    const buffer = document.createElement('canvas')
-    const bufferCtx = buffer.getContext('2d')
-    const image = new Image()
-    const ripples = []
-    let frame = 0
-    let width = 1
-    let height = 1
-    let last = { x: -9999, y: -9999 }
-    let lastPaint = 0
-
-    const cover = () => {
-      if (!image.naturalWidth) return
-      const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight)
-      const drawWidth = image.naturalWidth * scale
-      const drawHeight = image.naturalHeight * scale
-      bufferCtx.clearRect(0, 0, width, height)
-      bufferCtx.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight)
-    }
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect()
-      width = Math.max(1, Math.round(rect.width))
-      height = Math.max(1, Math.round(rect.height))
-      canvas.width = width
-      canvas.height = height
-      buffer.width = width
-      buffer.height = height
-      cover()
-    }
-
+    const canvas = ref.current; const ctx = canvas.getContext('2d')
+    const source = document.createElement('canvas'); const sourceCtx = source.getContext('2d')
+    const image = new Image(); const waves = []
+    let frame = 0; let width = 1; let height = 1; let last = { x: -9999, y: -9999 }
+    const cover = () => { if (!image.naturalWidth) return; const s = Math.max(width / image.naturalWidth, height / image.naturalHeight); const w = image.naturalWidth * s; const h = image.naturalHeight * s; sourceCtx.clearRect(0, 0, width, height); sourceCtx.drawImage(image, (width - w) / 2, (height - h) / 2, w, h) }
+    const resize = () => { const rect = canvas.getBoundingClientRect(); width = Math.max(1, Math.round(rect.width)); height = Math.max(1, Math.round(rect.height)); canvas.width = width; canvas.height = height; source.width = width; source.height = height; cover() }
     const draw = time => {
-      if (!image.naturalWidth) {
-        frame = requestAnimationFrame(draw)
-        return
-      }
-      // Limit distortion to 30fps; when no ripple is active, the image is one GPU-friendly draw.
-      if (time - lastPaint < 33) { frame = requestAnimationFrame(draw); return }
-      lastPaint = time
-      ctx.clearRect(0, 0, width, height)
-      ctx.filter = grayscale ? 'grayscale(1)' : 'none'
-      while (ripples.length && time - ripples[0].time > 2150) ripples.shift()
-      if (!ripples.length) {
-        ctx.drawImage(buffer, 0, 0)
-        ctx.filter = 'none'
-        frame = requestAnimationFrame(draw)
-        return
-      }
-      const tile = Math.max(7, Math.round(Math.min(width, height) / 72))
-
-      for (let y = 0; y < height; y += tile) {
-        for (let x = 0; x < width; x += tile) {
-          let shiftX = 0
-          let shiftY = 0
-          ripples.forEach(ripple => {
-            const age = (time - ripple.time) / 1000
-            if (age > 2.15) return
-            const dx = x - ripple.x
-            const dy = y - ripple.y
-            const distance = Math.hypot(dx, dy) || 1
-            const travel = brushSize * (0.34 + age * 1.18)
-            const envelope = Math.max(0, 1 - distance / (travel + brushSize * .72))
-            if (!envelope) return
-            const wave = Math.sin((distance / brushSize) * Math.PI * rings - age * 8.4)
-            const decay = Math.pow(envelope, 2) * Math.max(0, 1 - age / 2.15)
-            const force = wave * decay * brushSize * strength * .22
-            shiftX += (dx / distance) * force - (dy / distance) * force * swirl * .34
-            shiftY += (dy / distance) * force + (dx / distance) * force * swirl * .34
-          })
-          ctx.drawImage(buffer, x, y, tile + 1, tile + 1, x + shiftX, y + shiftY, tile + 1, tile + 1)
+      if (!image.naturalWidth) { frame = requestAnimationFrame(draw); return }
+      while (waves.length && time - waves[0].time > 1450) waves.shift()
+      ctx.clearRect(0, 0, width, height); ctx.filter = grayscale ? 'grayscale(1)' : 'none'
+      if (!waves.length) ctx.drawImage(source, 0, 0)
+      else {
+        const tile = Math.max(18, Math.round(width / 32))
+        for (let y = 0; y < height; y += tile) for (let x = 0; x < width; x += tile) {
+          let dx = 0; let dy = 0
+          waves.forEach(wave => { const age = (time - wave.time) / 1000; const px = x - wave.x; const py = y - wave.y; const distance = Math.hypot(px, py) || 1; const radius = brushSize + age * 210; if (distance > radius || age > 1.45) return; const fade = (1 - distance / radius) * (1 - age / 1.45); const force = Math.sin((1 - distance / radius) * Math.PI * rings - age * 7) * fade * brushSize * strength * .42; dx += (px / distance) * force - (py / distance) * force * swirl * .2; dy += (py / distance) * force + (px / distance) * force * swirl * .2 })
+          ctx.drawImage(source, x, y, tile + 1, tile + 1, x + dx, y + dy, tile + 1, tile + 1)
         }
       }
-      ctx.filter = 'none'
-      frame = requestAnimationFrame(draw)
+      ctx.filter = 'none'; frame = requestAnimationFrame(draw)
     }
-
-    const pointerMove = event => {
-      const rect = canvas.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const y = event.clientY - rect.top
-      if (Math.hypot(x - last.x, y - last.y) > brushSize * .2) {
-        ripples.push({ x, y, time: performance.now() })
-        last = { x, y }
-      }
-    }
-
-    image.onload = () => { resize(); frame = requestAnimationFrame(draw) }
-    image.src = src
-    const observer = new ResizeObserver(resize)
-    observer.observe(canvas)
-    canvas.addEventListener('pointermove', pointerMove)
-    resize()
-
-    return () => {
-      cancelAnimationFrame(frame)
-      observer.disconnect()
-      canvas.removeEventListener('pointermove', pointerMove)
-    }
+    const move = event => { const rect = canvas.getBoundingClientRect(); const x = event.clientX - rect.left; const y = event.clientY - rect.top; if (Math.hypot(x - last.x, y - last.y) > 30) { waves.push({ x, y, time: performance.now() }); last = { x, y } } }
+    image.onload = () => { resize(); frame = requestAnimationFrame(draw) }; image.src = src
+    const observer = new ResizeObserver(resize); observer.observe(canvas); canvas.addEventListener('pointermove', move); resize()
+    return () => { cancelAnimationFrame(frame); observer.disconnect(); canvas.removeEventListener('pointermove', move) }
   }, [src, brushSize, strength, swirl, rings, grayscale])
-
   return <canvas ref={ref} className={`ripple-distortion ${className}`} aria-label="Move the cursor to create image ripples" />
 }
