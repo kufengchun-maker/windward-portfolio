@@ -10,7 +10,7 @@ const smoothstep = (a, b, value) => {
 export default function ScrollExpand({
   src, alt = '', title = '', scrollHint = '', startWidth = 42, startHeight = 58,
   startRadius = 24, endRadius = 0, mediaZoom = 1.35, scrollDistance = 1.1,
-  holdDistance = .28, smoothing = .1, overlayScrim = .45, children, className = ''
+  holdDistance = .28, smoothing = .1, overlayScrim = .45, useWindowScroll = false, enabled = true, children, className = '', style
 }) {
   const rootRef = useRef(null)
   const trackRef = useRef(null)
@@ -21,8 +21,8 @@ export default function ScrollExpand({
   const overlayRef = useRef(null)
   const scrimRef = useRef(null)
   const hintRef = useRef(null)
-  const values = useRef({ startWidth, startHeight, startRadius, endRadius, mediaZoom, scrollDistance, holdDistance, smoothing, overlayScrim })
-  values.current = { startWidth, startHeight, startRadius, endRadius, mediaZoom, scrollDistance, holdDistance, smoothing, overlayScrim }
+  const values = useRef({ startWidth, startHeight, startRadius, endRadius, mediaZoom, scrollDistance, holdDistance, smoothing, overlayScrim, useWindowScroll, enabled })
+  values.current = { startWidth, startHeight, startRadius, endRadius, mediaZoom, scrollDistance, holdDistance, smoothing, overlayScrim, useWindowScroll, enabled }
 
   const applyProgress = useCallback((progress) => {
     const frame = frameRef.current
@@ -68,12 +68,12 @@ export default function ScrollExpand({
     let running = false
     const measure = () => {
       const value = values.current
-      stageHeight = window.innerHeight
+      stageHeight = value.useWindowScroll ? window.innerHeight : root.clientHeight
       stage.style.height = `${stageHeight}px`
       track.style.height = `${stageHeight * (1 + value.scrollDistance + value.holdDistance)}px`
       stage.style.setProperty('--se-title-size', `${clamp(root.clientWidth * .092, 44, 150)}px`)
     }
-    const read = () => clamp(-track.getBoundingClientRect().top / (stageHeight * values.current.scrollDistance), 0, 1)
+    const read = () => { const value = values.current; if (!value.enabled) return 1; return value.useWindowScroll ? clamp(-track.getBoundingClientRect().top / (stageHeight * value.scrollDistance), 0, 1) : clamp(root.scrollTop / (stageHeight * value.scrollDistance), 0, 1) }
     const tick = () => {
       const factor = values.current.smoothing <= 0 ? 1 : 1 - Math.exp(-1 / (60 * values.current.smoothing))
       current += (target - current) * factor
@@ -88,14 +88,15 @@ export default function ScrollExpand({
     }
     const onResize = () => { measure(); target = read(); current = target; applyProgress(current) }
     measure(); onResize()
-    window.addEventListener('scroll', onScroll, { passive: true })
+    const scroller = useWindowScroll ? window : root
+    scroller.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)
     const observer = new ResizeObserver(onResize)
     observer.observe(root)
-    return () => { if (frame) cancelAnimationFrame(frame); window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onResize); observer.disconnect() }
+    return () => { if (frame) cancelAnimationFrame(frame); scroller.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onResize); observer.disconnect() }
   }, [applyProgress])
 
-  return <section ref={rootRef} className={`scroll-expand ${className}`}>
+  return <section ref={rootRef} className={`scroll-expand ${useWindowScroll ? '' : 'scroll-expand--scroller'} ${className}`} style={style}>
     <div ref={trackRef} className="scroll-expand__track">
       <div ref={stageRef} className="scroll-expand__stage">
         <div ref={frameRef} className="scroll-expand__frame">
