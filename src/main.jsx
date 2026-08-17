@@ -181,7 +181,7 @@ function App() {
       </nav>
       <div className="hero__body page-width">
         <p className="hero__eyebrow">JIAN ZHUOFAN / VISUAL STORYTELLER / CHINA</p>
-        <div className="hero__title"><h1 className="hero__title-main"><ScatterText text="WINDWARD" /></h1><p className="hero__title-sub"><ScatterText text="floating. still. drifting" /></p></div>
+        <div className="hero__title"><h1 className="hero__title-main" data-glitch="WINDWARD"><ScatterText text="WINDWARD" /></h1><p className="hero__title-sub"><ScatterText text="floating. still. drifting" /></p></div>
         <div className="hero__bottom">
           <p><ScatterText text="Floating Wind" /></p>
           <a href="#work" className="circle-link">SCROLL<br />TO SEE <span>↓</span></a>
