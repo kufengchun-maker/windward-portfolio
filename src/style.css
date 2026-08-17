@@ -146,4 +146,4 @@ body,body *{cursor:auto}.hero--mountain,.hero--mountain *,.portrait,.project__ar
 .project--fellowship .project__word{bottom:6%}.project--sony .project__word{font-family:var(--sans);font-size:clamp(42px,6.7vw,116px);font-style:normal;letter-spacing:-.075em;line-height:.72}@media(max-width:720px){.project--fellowship .project__word{bottom:6%}.project--sony .project__word{font-size:38px}}
 
 /* The hero disc pivots from its uppermost point through one half-turn while scrolling. */
-.acid-disc{transform-origin:34vh 0;transform:translateY(calc(var(--hero-progress,0) * -110px)) rotate(calc(var(--hero-progress,0) * -180deg))}@media(max-width:720px){.acid-disc{transform-origin:34vw 0}}
+.acid-disc{transform-origin:34vh 0;transform:translateY(calc(var(--hero-progress,0) * -110px)) rotate(calc(var(--hero-progress,0) * 180deg))}@media(max-width:720px){.acid-disc{transform-origin:34vw 0}}
