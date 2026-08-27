@@ -209,4 +209,5 @@ body:has(.flower-carousel__expand:hover) .site-cursor:after{transform:translate(
 @keyframes rooted-sphere{0%{transform:rotate(0deg);background-position:0 0,0 0}50%{transform:rotate(180deg);background-position:22px -10px,-30px 16px}100%{transform:rotate(360deg);background-position:0 0,0 0}}
 .identity-intro--personal{padding-top:120px}
 .contact-page__main>div a:first-child{color:#fff}
+.footer-email__white{color:#fff}
 @media(max-width:720px){.identity-intro--personal{padding-top:74px}.rooted-cover>i{animation-duration:16s}}

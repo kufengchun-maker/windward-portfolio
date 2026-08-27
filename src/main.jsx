@@ -306,7 +306,7 @@ function App() {
 
     <footer className="footer reveal-on-scroll" id="contact">
       <div className="footer__orb" aria-hidden="true" />
-      <div className="page-width footer__inner"><div className="section-tag"><span>( 07 )</span><span>CONTACT</span></div><div className="footer__main"><p>LET’S MAKE SOMETHING THAT<br />DESERVES TO BE SEEN.</p><a className="footer-email" href="mailto:kufengchun@gmail.com">EMAIL<span>:</span><br /><HoverBounceText text="KUFENGCHUN@" /><br /><HoverBounceText text="GMAIL.COM" /> <Arrow /></a></div><div className="footer__end"><span>© 2026 JIAN ZHUOFAN / ALL RIGHTS RESERVED</span><span>GUANGDONG — HONG KONG</span><a href="#top">BACK TO TOP ↑</a></div></div>
+      <div className="page-width footer__inner"><div className="section-tag"><span>( 07 )</span><span>CONTACT</span></div><div className="footer__main"><p>LET’S MAKE SOMETHING THAT<br />DESERVES TO BE SEEN.</p><a className="footer-email" href="mailto:kufengchun@gmail.com">EMAIL<span>:</span><br /><HoverBounceText text="KUFENG" /><span className="footer-email__white"><HoverBounceText text="CHUN@" /></span><br /><HoverBounceText text="GMAIL.COM" /> <Arrow /></a></div><div className="footer__end"><span>© 2026 JIAN ZHUOFAN / ALL RIGHTS RESERVED</span><span>GUANGDONG — HONG KONG</span><a href="#top">BACK TO TOP ↑</a></div></div>
     </footer>
     <SiteCursor cursor={cursor} overHero={overHero} active={overHero || overImage} />
   </main>
