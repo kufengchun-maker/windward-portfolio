@@ -49,7 +49,7 @@ const virtualCollections = [
   { id:'01', title:'花 / FLOWERS', note:'一组以红色花朵、蝴蝶与占卜意象构成的虚拟肖像。2025.11.13', files: ['flower-01.jpg', 'flower-02.jpg', 'flower-03.jpg', 'flower-04.jpg'] },
   { id:'02', title:'少女暴君 / THE GIRL TYRANT', note:'一组关于甜美、权力与虚拟角色姿态的时装肖像。2026.01.17', files: ['tyrant-01.jpg', 'tyrant-02.jpg', 'tyrant-03.jpg', 'tyrant-04.jpg'] },
   { id:'03', title:'毒 / POISON', note:'网、刺、荧光绿与柔软皮肤：一组关于吸引、束缚和危险欲望的虚拟肖像。', files: ['poison-01.jpg', 'poison-02.jpg', 'poison-03.jpg', 'poison-04.jpg', 'poison-05.jpg'] },
-  { id:'04', title:'IV. [ ARCHIVE IN PROGRESS ]', note:'预留给下一组虚拟摄影作品。', files: [] },
+  { id:'04', title:'机械降神 / DEUS EX MACHINA', note:'在科技之下，科技的产物、机械造出的“神”降临：它究竟仍是神，还是另一种等待被命名的存在？', files: ['deus-ex-machina-01.jpg', 'deus-ex-machina-02.jpg'] },
   { id:'05', title:'蚀 / EROSION', note:'关于人、消融与被侵蚀：无路可退时，被迫或主动加入这场灾难。银色遍布世界的每个地方——你也要加入吗？', files: ['erosion-01.jpg'] },
 ]
 

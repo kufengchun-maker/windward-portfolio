@@ -211,3 +211,4 @@ body:has(.flower-carousel__expand:hover) .site-cursor:after{transform:translate(
 .contact-page__main>div a:first-child{color:#fff}
 .footer-email__white{color:#fff}
 @media(max-width:720px){.identity-intro--personal{padding-top:74px}.rooted-cover>i{animation-duration:16s}}
+@media(max-width:720px){.footer .footer__orb{display:block;opacity:1;right:-29vw;top:-14vw;width:82vw;transform:rotate(0) scale(1);animation:none}}
