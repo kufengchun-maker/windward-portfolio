@@ -14,10 +14,16 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
     let width = 0
     let height = 0
     let dpr = 1
+    let lastPaint = 0
+    const ribbons = [
+      { position: .17, width: .075, phase: 0, amplitude: .13 },
+      { position: .49, width: .09, phase: 2.3, amplitude: .17 },
+      { position: .78, width: .07, phase: 4.7, amplitude: .12 },
+    ]
     const pointer = { x: -9999, y: -9999, tx: -9999, ty: -9999 }
     const resize = () => {
       const rect = host.getBoundingClientRect()
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5)
+      dpr = 1
       width = Math.max(1, fixed ? window.innerWidth : rect.width)
       height = Math.max(1, fixed ? window.innerHeight : rect.height)
       canvas.width = Math.round(width * dpr)
@@ -33,6 +39,8 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
     }
     const leave = () => { pointer.tx = -9999; pointer.ty = -9999 }
     const draw = time => {
+      if (document.hidden || time - lastPaint < 30) { frame = requestAnimationFrame(draw); return }
+      lastPaint = time
       pointer.x += (pointer.tx - pointer.x) * Math.max(.04, tension * (1.7 + (1 - friction) * 6))
       pointer.y += (pointer.ty - pointer.y) * Math.max(.04, tension * (1.7 + (1 - friction) * 6))
       context.clearRect(0, 0, width, height)
@@ -46,11 +54,6 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
       const baseFlow = (x, y) => {
         let moveX = 0
         let moveY = 0
-        const ribbons = [
-          { position: .17, width: .075, phase: 0, amplitude: .13 },
-          { position: .49, width: .09, phase: 2.3, amplitude: .17 },
-          { position: .78, width: .07, phase: 4.7, amplitude: .12 },
-        ]
         ribbons.forEach((ribbon, index) => {
           const center = height * (ribbon.position + Math.sin(x * .0052 + t * (.46 + index * .08) + ribbon.phase) * ribbon.amplitude)
           const distance = y - center
@@ -88,7 +91,7 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
       for (let column = 0; column < columns; column += 1) {
         const baseX = column * xGap
         context.beginPath()
-        for (let y = -yGap; y <= height + yGap; y += yGap * .42) {
+        for (let y = -yGap; y <= height + yGap; y += yGap * .65) {
           const flow = baseFlow(baseX, y)
           const wave = distort(baseX, y)
           const x = baseX + flow.x + Math.cos(y * .011 + t * waveSpeedY * 12 + column * .4) * waveAmpX * .12 + Math.sin(column * .36 + t * waveSpeedX * 12) * waveAmpY * .07 + wave.x
