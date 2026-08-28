@@ -9,6 +9,7 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
     const host = canvas?.parentElement
     if (!canvas || !host) return undefined
     const context = canvas.getContext('2d', { alpha: true })
+    const fixed = className.includes('waves-canvas--fixed')
     let frame = 0
     let width = 0
     let height = 0
@@ -17,8 +18,8 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
     const resize = () => {
       const rect = host.getBoundingClientRect()
       dpr = Math.min(window.devicePixelRatio || 1, 1.5)
-      width = Math.max(1, rect.width)
-      height = Math.max(1, rect.height)
+      width = Math.max(1, fixed ? window.innerWidth : rect.width)
+      height = Math.max(1, fixed ? window.innerHeight : rect.height)
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
       canvas.style.width = `${width}px`
@@ -27,8 +28,8 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
     }
     const move = event => {
       const rect = host.getBoundingClientRect()
-      pointer.tx = event.clientX - rect.left
-      pointer.ty = event.clientY - rect.top
+      pointer.tx = fixed ? event.clientX : event.clientX - rect.left
+      pointer.ty = fixed ? event.clientY : event.clientY - rect.top
     }
     const leave = () => { pointer.tx = -9999; pointer.ty = -9999 }
     const draw = time => {
@@ -37,21 +38,40 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
       context.clearRect(0, 0, width, height)
       if (backgroundColor !== 'transparent') { context.fillStyle = backgroundColor; context.fillRect(0, 0, width, height) }
       context.strokeStyle = lineColor
-      context.globalAlpha = .22
+      context.globalAlpha = .58
       context.lineWidth = 1
       const t = time * .001
       const rows = Math.ceil(height / yGap) + 2
+      const columns = Math.ceil(width / xGap) + 2
+      const distort = (x, y) => {
+        const dx = x - pointer.x
+        const dy = y - pointer.y
+        const distance = Math.hypot(dx, dy)
+        const force = Math.max(0, 1 - distance / maxCursorMove)
+        if (!force) return { x: 0, y: 0 }
+        const angle = Math.atan2(dy, dx)
+        const curl = Math.sin(distance * .06 - t * 5.4) * maxCursorMove * .32 * force * force
+        return { x: Math.cos(angle + Math.PI / 2) * curl, y: Math.sin(angle + Math.PI / 2) * curl }
+      }
       for (let row = 0; row < rows; row += 1) {
         const baseY = row * yGap
         context.beginPath()
         for (let x = -xGap; x <= width + xGap; x += xGap) {
-          const dx = x - pointer.x
-          const dy = baseY - pointer.y
-          const distance = Math.hypot(dx, dy)
-          const force = Math.max(0, 1 - distance / maxCursorMove)
-          const ripple = force * Math.cos(distance * .075 - t * 5) * maxCursorMove * .18
-          const y = baseY + Math.sin(x * .012 + t * waveSpeedX * 12 + row * .44) * waveAmpY * .12 + Math.cos(row * .42 + t * waveSpeedY * 12) * waveAmpX * .08 + ripple
-          if (x <= 0) context.moveTo(x, y); else context.lineTo(x, y)
+          const wave = distort(x, baseY)
+          const y = baseY + Math.sin(x * .012 + t * waveSpeedX * 12 + row * .44) * waveAmpY * .12 + Math.cos(row * .42 + t * waveSpeedY * 12) * waveAmpX * .08 + wave.y
+          const px = x + wave.x
+          if (x <= 0) context.moveTo(px, y); else context.lineTo(px, y)
+        }
+        context.stroke()
+      }
+      for (let column = 0; column < columns; column += 1) {
+        const baseX = column * xGap
+        context.beginPath()
+        for (let y = -yGap; y <= height + yGap; y += yGap * .42) {
+          const wave = distort(baseX, y)
+          const x = baseX + Math.cos(y * .011 + t * waveSpeedY * 12 + column * .4) * waveAmpX * .12 + Math.sin(column * .36 + t * waveSpeedX * 12) * waveAmpY * .07 + wave.x
+          const py = y + wave.y
+          if (y <= 0) context.moveTo(x, py); else context.lineTo(x, py)
         }
         context.stroke()
       }
