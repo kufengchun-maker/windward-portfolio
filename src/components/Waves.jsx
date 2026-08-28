@@ -33,8 +33,8 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
     }
     const leave = () => { pointer.tx = -9999; pointer.ty = -9999 }
     const draw = time => {
-      pointer.x += (pointer.tx - pointer.x) * Math.max(.04, tension * 3)
-      pointer.y += (pointer.ty - pointer.y) * Math.max(.04, tension * 3)
+      pointer.x += (pointer.tx - pointer.x) * Math.max(.04, tension * (1.7 + (1 - friction) * 6))
+      pointer.y += (pointer.ty - pointer.y) * Math.max(.04, tension * (1.7 + (1 - friction) * 6))
       context.clearRect(0, 0, width, height)
       if (backgroundColor !== 'transparent') { context.fillStyle = backgroundColor; context.fillRect(0, 0, width, height) }
       context.strokeStyle = lineColor
@@ -43,6 +43,26 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
       const t = time * .001
       const rows = Math.ceil(height / yGap) + 2
       const columns = Math.ceil(width / xGap) + 2
+      const baseFlow = (x, y) => {
+        let moveX = 0
+        let moveY = 0
+        const ribbons = [
+          { position: .17, width: .075, phase: 0, amplitude: .13 },
+          { position: .49, width: .09, phase: 2.3, amplitude: .17 },
+          { position: .78, width: .07, phase: 4.7, amplitude: .12 },
+        ]
+        ribbons.forEach((ribbon, index) => {
+          const center = height * (ribbon.position + Math.sin(x * .0052 + t * (.46 + index * .08) + ribbon.phase) * ribbon.amplitude)
+          const distance = y - center
+          const spread = height * ribbon.width
+          const influence = Math.exp(-(distance * distance) / (2 * spread * spread))
+          const curl = Math.sin(distance / spread * Math.PI * .92)
+          moveY += curl * influence * waveAmpY * .9
+          moveX += Math.cos(distance / spread * Math.PI * .76) * influence * waveAmpX * .82 * Math.sin(x * .003 + t * .35 + ribbon.phase)
+        })
+        const broad = Math.sin(x * .0028 + y * .0032 + t * .28)
+        return { x: moveX + broad * waveAmpX * .12, y: moveY + broad * waveAmpY * .1 }
+      }
       const distort = (x, y) => {
         const dx = x - pointer.x
         const dy = y - pointer.y
@@ -57,9 +77,10 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
         const baseY = row * yGap
         context.beginPath()
         for (let x = -xGap; x <= width + xGap; x += xGap) {
+          const flow = baseFlow(x, baseY)
           const wave = distort(x, baseY)
-          const y = baseY + Math.sin(x * .012 + t * waveSpeedX * 12 + row * .44) * waveAmpY * .12 + Math.cos(row * .42 + t * waveSpeedY * 12) * waveAmpX * .08 + wave.y
-          const px = x + wave.x
+          const y = baseY + flow.y + Math.sin(x * .012 + t * waveSpeedX * 12 + row * .44) * waveAmpY * .12 + Math.cos(row * .42 + t * waveSpeedY * 12) * waveAmpX * .08 + wave.y
+          const px = x + flow.x + wave.x
           if (x <= 0) context.moveTo(px, y); else context.lineTo(px, y)
         }
         context.stroke()
@@ -68,9 +89,10 @@ export default function Waves({ lineColor = '#c8ff3f', backgroundColor = 'transp
         const baseX = column * xGap
         context.beginPath()
         for (let y = -yGap; y <= height + yGap; y += yGap * .42) {
+          const flow = baseFlow(baseX, y)
           const wave = distort(baseX, y)
-          const x = baseX + Math.cos(y * .011 + t * waveSpeedY * 12 + column * .4) * waveAmpX * .12 + Math.sin(column * .36 + t * waveSpeedX * 12) * waveAmpY * .07 + wave.x
-          const py = y + wave.y
+          const x = baseX + flow.x + Math.cos(y * .011 + t * waveSpeedY * 12 + column * .4) * waveAmpX * .12 + Math.sin(column * .36 + t * waveSpeedX * 12) * waveAmpY * .07 + wave.x
+          const py = y + flow.y + wave.y
           if (y <= 0) context.moveTo(x, py); else context.lineTo(x, py)
         }
         context.stroke()
