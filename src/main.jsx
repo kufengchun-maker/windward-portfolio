@@ -59,6 +59,7 @@ function ScatterText({ text, className = '' }) { return <span className={classNa
 function BouncyText({ text }) { return <>{Array.from(text).map((letter, index) => <span className="about__letter" key={`${letter}-${index}`}>{letter}</span>)}</> }
 function SiteCursor({ cursor, overHero, active }) { return <div className={`${active ? 'is-active ' : ''}${overHero ? 'is-hero ' : ''}site-cursor`} style={{ left: cursor.x, top: cursor.y }} aria-hidden="true"><i /><i /><span /><span /><span /></div> }
 function HoverBounceText({ text }) { return <span className="hover-bounce-text">{Array.from(text).map((letter, index) => <span key={`${letter}-${index}`} style={{ '--bounce-delay': `${index * 28}ms` }}>{letter}</span>)}</span> }
+function CreativeEasterEgg() { return <aside className="creative-easter-egg" aria-hidden="true"><div className="creative-easter-egg__pollution" /><div className="creative-easter-egg__noise" /><img className="creative-easter-egg__dream" src="/assets/easter-egg/dream-awake.png" alt="" /></aside> }
 
 function PageBack() { return <a className="page-back" href="#about">← BACK TO PORTFOLIO</a> }
 function BilibiliEmbed({ project }) { return <section className="case-video case-video--bilibili"><div className="bilibili-embed__top"><span>BILIBILI / VIDEO PREVIEW</span><b>{project.evidence}</b></div><iframe src={project.url} title={`${project.title} 的 Bilibili 视频`} loading="lazy" allow="autoplay; fullscreen" referrerPolicy="no-referrer" /><div className="bilibili-embed__fallback"><span>如播放器未显示，请在 Bilibili 打开原视频。</span><a href={project.url} target="_blank" rel="noreferrer">OPEN IN BILIBILI <Arrow /></a></div></section> }
@@ -129,6 +130,8 @@ function App() {
   const [overHero, setOverHero] = useState(false)
   const [overImage, setOverImage] = useState(false)
   const [isRushing, setIsRushing] = useState(false)
+  const [unlockedStrengths, setUnlockedStrengths] = useState([])
+  const [creativeEgg, setCreativeEgg] = useState(false)
   const [route, setRoute] = useState(window.location.hash)
   useEffect(() => { setLoaded(true) }, [])
   useEffect(() => {
@@ -166,6 +169,14 @@ function App() {
     })
     return () => { window.cancelAnimationFrame(frame); window.clearTimeout(fallback); observer?.disconnect() }
   }, [route])
+  useEffect(() => {
+    if (!creativeEgg) return undefined
+    const timer = window.setTimeout(() => {
+      setCreativeEgg(false)
+      setUnlockedStrengths([])
+    }, 7200)
+    return () => window.clearTimeout(timer)
+  }, [creativeEgg])
   useEffect(() => {
     const changeRoute = () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
@@ -213,6 +224,15 @@ function App() {
     target.style.setProperty('--portrait-y', '62px')
     window.setTimeout(() => target.style.setProperty('--portrait-y', '0px'), 520)
   }
+  const unlockStrength = (id) => {
+    if (creativeEgg) return
+    setUnlockedStrengths((current) => {
+      if (current.includes(id)) return current
+      const next = [...current, id]
+      if (next.length === strengths.length) setCreativeEgg(true)
+      return next
+    })
+  }
 
   const caseId = route.replace('#case/', '')
   const activeProject = projects.find((project) => project.id === caseId)
@@ -239,7 +259,7 @@ function App() {
   if (activeSeries) return <><SeriesPage collection={activeSeries} /><SiteCursor cursor={cursor} overHero={false} active={overImage} /></>
   if (activeArtwork) return <><ArtworkPage file={activeArtwork} collection={artworkCollection} /><SiteCursor cursor={cursor} overHero={false} active={overImage} /></>
 
-  return <main className={loaded ? 'site is-ready' : 'site'} style={{ '--hero-progress': heroProgress, '--acid-opacity': .17 * (1 - heroProgress), '--hero-fade': 1 - heroProgress }}>
+  return <main className={`${loaded ? 'site is-ready' : 'site'}${creativeEgg ? ' is-ritual' : ''}`} style={{ '--hero-progress': heroProgress, '--acid-opacity': .17 * (1 - heroProgress), '--hero-fade': 1 - heroProgress }}>
     <section className={isRushing ? 'hero hero--mountain is-rushing' : 'hero hero--mountain'} id="top" onPointerEnter={() => setOverHero(true)} onPointerLeave={() => { setOverHero(false); setIsRushing(false) }} onPointerDown={() => setIsRushing(true)} onPointerUp={() => setIsRushing(false)} onPointerCancel={() => setIsRushing(false)}>
       <div className="mountain-scene" aria-hidden="true">
         <svg className="wind wind--far" viewBox="0 0 1600 500" preserveAspectRatio="none"><path d="M-110 92C230 46 600 119 900 64c300-55 500 18 730-18"/><path d="M-90 157c310-46 610 18 910-28 250-38 500 17 810-11"/><path d="M-50 213c230-38 530 18 830-28 250-38 500 17 850-11"/></svg>
@@ -309,7 +329,7 @@ function App() {
     <section className="strengths page-width reveal-on-scroll">
       <div className="section-tag"><span>( 06 )</span><span>WHAT I BRING</span></div>
       <div className="strengths__top"><h2>CREATIVE<br /><em>THINKING.</em></h2><p>将创作表达、受众意识与策略思考<br />连接成完整的工作方式。</p></div>
-      <div className="strength-grid">{strengths.map(([n,t,d]) => <article className="strength" key={n}><div><span>{n}</span><Arrow /></div><h3>{t}</h3><p>{d}</p></article>)}</div>
+      <div className="strength-grid">{strengths.map(([n,t,d]) => <article className={`strength${unlockedStrengths.includes(n) ? ' is-unlocked' : ''}`} key={n} role="button" tabIndex={0} onClick={() => unlockStrength(n)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); unlockStrength(n) } }}><div><span>{n}</span><Arrow /></div><h3>{t}</h3><p>{d}</p></article>)}</div>
       <div className="skills-line">PHOTOGRAPHY · VIDEO EDITING · VISUAL STORYTELLING · ART DIRECTION · LAYOUT DESIGN · CROSS-CULTURAL RESEARCH · PRESENTATION DESIGN · TEAM LEADERSHIP · CREATIVE STRATEGY · ENGLISH–CHINESE COMMUNICATION</div>
     </section>
 
@@ -317,6 +337,7 @@ function App() {
       <div className="footer__orb" aria-hidden="true" />
       <div className="page-width footer__inner"><div className="section-tag"><span>( 07 )</span><span>CONTACT</span></div><div className="footer__main"><p>LET’S MAKE SOMETHING THAT<br />DESERVES TO BE SEEN.</p><a className="footer-email" href="mailto:kufengchun@gmail.com">EMAIL<span>:</span><br /><HoverBounceText text="KUFENG" /><span className="footer-email__white"><HoverBounceText text="CHUN@" /></span><br /><HoverBounceText text="GMAIL.COM" /> <Arrow /></a></div><div className="footer__end"><span>© 2026 JIAN ZHUOFAN / ALL RIGHTS RESERVED</span><span>GUANGDONG — HONG KONG</span><a href="#top">BACK TO TOP ↑</a></div></div>
     </footer>
+    {creativeEgg ? <CreativeEasterEgg /> : null}
     <SiteCursor cursor={cursor} overHero={overHero} active={overHero || overImage} />
   </main>
 }
