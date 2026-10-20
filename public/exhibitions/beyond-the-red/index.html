@@ -1,0 +1,735 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>未完成的展览 · Beyond the Red</title>
+    <style>
+        :root {
+            --ink: #171d18;
+            --paper: #f0ece3;
+            --green: #d0dfad;
+            --red: #b3342b
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--ink);
+            color: var(--paper);
+            font: 15px/1.8 Arial,sans-serif
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer
+        }
+
+            button:focus-visible {
+                outline: 3px solid #b68e52;
+                outline-offset: 4px
+            }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 6%;
+            border-bottom: 1px solid #ffffff25
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            letter-spacing: 2px
+        }
+
+            .logo small {
+                display: block;
+                font: 9px monospace;
+                letter-spacing: 2px;
+                opacity: .6
+            }
+
+        nav {
+            display: flex;
+            gap: 20px
+        }
+
+            nav button {
+                border: 0;
+                background: none;
+                color: inherit;
+                font-size: 12px
+            }
+
+        main {
+            max-width: 1200px;
+            padding: 0 6%;
+            margin: auto
+        }
+
+        .eyebrow {
+            font: 11px monospace;
+            letter-spacing: 2px;
+            color: var(--green)
+        }
+
+        .hero {
+            padding: 65px 0 35px
+        }
+
+        h1 {
+            font: normal clamp(48px,7vw,90px)/1.05 Georgia,serif;
+            letter-spacing: -2px;
+            margin: 20px 0
+        }
+
+            h1 em {
+                color: var(--green)
+            }
+
+        .lead {
+            max-width: 590px;
+            color: #afb7aa;
+            font-size: 14px
+        }
+
+        .rule {
+            border-top: 1px solid #ffffff30;
+            border-bottom: 1px solid #ffffff30;
+            padding: 15px 0;
+            font: 11px monospace;
+            display: flex;
+            justify-content: space-between
+        }
+
+        .forum-layout {
+            display: grid;
+            grid-template-columns: 1fr 240px;
+            gap: 30px;
+            padding: 30px 0 65px
+        }
+
+        .thread {
+            border: 1px solid #ffffff30
+        }
+
+        .thread-title {
+            padding: 25px;
+            background: #252e22
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: normal;
+            line-height: 1.4
+        }
+
+        .meta {
+            font: 10px monospace;
+            opacity: .6
+        }
+
+        .post {
+            padding: 25px;
+            border-bottom: 1px solid #ffffff20
+        }
+
+            .post b {
+                font: 12px monospace;
+                color: var(--green)
+            }
+
+            .post p {
+                margin-bottom: 0;
+                color: #bec6b7
+            }
+
+        .cta {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 23px;
+            border: 0;
+            background: var(--green);
+            color: #23301d;
+            text-align: left
+        }
+
+        aside section {
+            padding: 20px 0;
+            border-top: 1px solid #ffffff30
+        }
+
+        aside h3 {
+            font: 11px monospace;
+            letter-spacing: 2px
+        }
+
+        aside p {
+            font-size: 12px;
+            color: #a7b49c
+        }
+
+        .poster {
+            height: 180px;
+            background: #b3342b;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            place-content: center;
+            font: 28px Georgia
+        }
+
+            .poster:before {
+                content: "";
+                position: absolute;
+                width: 130px;
+                height: 210px;
+                border: 1px solid #e6b092;
+                transform: rotate(30deg);
+                left: 40px
+            }
+
+        footer {
+            padding: 25px 6%;
+            border-top: 1px solid #ffffff25;
+            font: 10px monospace;
+            opacity: .6
+        }
+
+        .gallery {
+            background: var(--paper);
+            color: #28291f;
+            min-height: 100vh
+        }
+
+            .gallery header, .gallery footer {
+                border-color: #28291f30
+            }
+
+            .gallery .eyebrow {
+                color: var(--red)
+            }
+
+            .gallery h1 {
+                font-size: clamp(65px,10vw,135px)
+            }
+
+            .gallery .lead {
+                color: #777264
+            }
+
+            .gallery .rule {
+                border-color: #28291f30
+            }
+
+        .intro {
+            padding: 50px 0 30px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 30px 24px;
+            padding: 30px 0 60px
+        }
+
+        .art {
+            background: none;
+            border: 0;
+            padding: 0;
+            text-align: left;
+            color: inherit
+        }
+
+        .picture {
+            position: relative;
+            aspect-ratio: 1.2;
+            overflow: hidden
+        }
+
+            .picture svg {
+                width: 100%;
+                height: 100%;
+                display: block;
+                transition: transform .5s
+            }
+
+        .art:hover svg {
+            transform: scale(1.04)
+        }
+
+        .picture .label {
+            position: absolute;
+            bottom: 13px;
+            left: 13px;
+            background: #f0ece3e8;
+            padding: 6px 10px;
+            font: 9px monospace
+        }
+
+        .art.locked svg {
+            filter: grayscale(1);
+            opacity: .25
+        }
+
+        .art h3 {
+            font: 23px Georgia;
+            margin: 12px 0 5px
+        }
+
+        .art p {
+            font-size: 11px;
+            color: #817966;
+            margin: 0
+        }
+
+        .art .number {
+            font: 10px monospace;
+            color: #8c8270;
+            margin-top: 13px
+        }
+
+        .quote {
+            max-width: 850px;
+            border-top: 1px solid #28291f30;
+            padding: 40px 0 60px;
+            font: italic 30px/1.6 Georgia
+        }
+
+            .quote small {
+                display: block;
+                font: 13px/1.8 Arial;
+                color: #857c6c;
+                margin-top: 20px
+            }
+
+        .reset {
+            background: none;
+            border: 0;
+            color: #857c6c;
+            text-decoration: underline;
+            font-size: 11px;
+            margin-bottom: 25px
+        }
+
+        dialog {
+            width: min(720px,92vw);
+            max-height: 88vh;
+            border: 0;
+            background: var(--paper);
+            color: #29291f;
+            padding: 35px
+        }
+
+            dialog::backdrop {
+                background: #071009cf;
+                backdrop-filter: blur(6px)
+            }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            color: var(--red);
+            font: 10px monospace;
+            letter-spacing: 1px
+        }
+
+        .close {
+            background: none;
+            border: 0;
+            font-size: 28px
+        }
+
+        dialog h2 {
+            font: 36px Georgia;
+            margin: 20px 0
+        }
+
+        .record {
+            border-top: 1px solid #c7c0b0;
+            padding-top: 20px
+        }
+
+            .record b {
+                display: block;
+                margin-top: 18px;
+                font: 11px monospace;
+                color: var(--red)
+            }
+
+        .cn {
+            font-size: 13px;
+            color: #817662;
+            border-left: 2px solid #b9aa92;
+            padding-left: 15px;
+            margin: 25px 0
+        }
+
+        .action {
+            border: 0;
+            background: #273321;
+            color: #f0ece3;
+            padding: 16px;
+            width: 100%;
+            margin-top: 25px;
+            font: 12px monospace
+        }
+
+        .choice {
+            width: 100%;
+            background: none;
+            border: 1px solid #bcb2a0;
+            padding: 18px;
+            text-align: left;
+            margin-top: 12px;
+            color: #29291f
+        }
+
+            .choice:hover {
+                background: #e4ddcf;
+                border-color: var(--red)
+            }
+
+            .choice strong {
+                display: block;
+                font: 21px Georgia;
+                margin-bottom: 8px
+            }
+
+            .choice small {
+                font-size: 12px;
+                line-height: 1.7
+            }
+
+        .loading {
+            position: fixed;
+            inset: 0;
+            background: var(--paper);
+            color: var(--red);
+            display: grid;
+            place-content: center;
+            text-align: center;
+            z-index: 5
+        }
+
+            .loading p {
+                font: italic 40px Georgia
+            }
+
+            .loading small {
+                font: 12px monospace;
+                letter-spacing: 2px
+            }
+
+        @media(max-width:700px) {
+            .forum-layout {
+                grid-template-columns: 1fr
+            }
+
+            aside {
+                display: none
+            }
+
+            .grid {
+                grid-template-columns: repeat(2,1fr)
+            }
+
+            header {
+                padding: 18px 5%
+            }
+
+            nav {
+                gap: 10px
+            }
+
+            main {
+                padding: 0 5%
+            }
+
+            .hero {
+                padding-top: 40px
+            }
+
+            .rule {
+                font-size: 9px;
+                gap: 15px
+            }
+
+            dialog {
+                padding: 23px
+            }
+
+            .quote {
+                font-size: 24px
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                transition: none !important
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <dialog id="dialog" aria-label="展览档案"></dialog>
+
+    <script>const $=id=>document.getElementById(id);
+const KEY="beyond-the-red-rebuilt-v1";
+let state={read:[],open:false},page="forum",chinese=true;
+try{
+ const saved=JSON.parse(localStorage.getItem(KEY));
+ if(saved&&Array.isArray(saved.read)){
+  state={read:[...new Set(saved.read.filter(n=>Number.isInteger(n)&&n>=0&&n<5))],open:!!saved.open};
+ }
+}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+const works=[
+ ["The Color Red","色彩、识别与文化期待"],
+ ["A City Without Dragons","城市生活与当代身份"],
+ ["Jianghu.exe","武侠、数字文化与陌生感"],
+ ["Made in China","文化标签与解释的边界"],
+ ["The Language of Home","家庭记忆、翻译与归属"],
+ ["Beyond the Frame","最终策展决定"]
+];
+const images=[
+ `<rect width="500" height="400" fill="#cabba5"/>
+ <path d="M180 30C340-30 440 180 310 320S80 340 135 190 105 65 180 30" fill="#b3342b"/>
+ <path d="M220 0Q130 180 350 400" fill="none" stroke="#e8cdb2" stroke-width="3"/>
+ <circle cx="380" cy="75" r="43" fill="#66362b"/>`,
+ `<rect width="500" height="400" fill="#b7c9c3"/>
+ <path d="M0 400V90H100V400M135 400V30H240V400M270 400V130H390V400M420 400V0H500V400" fill="#4f6968"/>
+ ${Array.from({length:11},(_,i)=>`<path d="M${i*48} 25V290" stroke="#d5d8bf" stroke-width="4"/>`).join("")}
+ <path d="M0 350L500 240V400H0" fill="#bab7a3"/>
+ <rect x="265" y="265" width="75" height="55" fill="#b64b35"/>
+ <path d="M0 380L500 270" stroke="#eee6cf" stroke-width="4"/>`,
+ `<rect width="500" height="400" fill="#172d2b"/>
+ <circle cx="375" cy="80" r="37" fill="#d3c19a"/>
+ <path d="M0 300L110 130 180 250 275 60 370 245 425 180 500 290V400H0" fill="#597a6f"/>
+ <path d="M0 350L150 210 260 310 350 200 500 320V400H0" fill="#2e4c40"/>
+ <path d="M180 355L340 240" stroke="#d86248" stroke-width="3"/>
+ <text x="25" y="48" fill="#d7ddbd" font-size="18" font-family="monospace">江湖 / WORLD.INIT</text>`,
+ `<rect width="500" height="400" fill="#aa9270"/>
+ ${Array.from({length:7},(_,i)=>`<rect x="${18+i*72}" y="35" width="49" height="330" fill="${i%2?"#d7c7a7":"#8c533c"}"/>`).join("")}
+ <text x="35" y="190" fill="#f2e5cb" font-size="56" font-family="Georgia">MADE /</text>
+ <text x="35" y="255" fill="#f2e5cb" font-size="50" font-family="Georgia">BY WHOM?</text>`,
+ `<rect width="500" height="400" fill="#c8bda0"/>
+ <rect x="65" y="35" width="370" height="320" fill="#645b45"/>
+ <rect x="82" y="52" width="336" height="286" fill="#ac9670"/>
+ <circle cx="170" cy="135" r="44" fill="#e4c994"/>
+ <path d="M250 52V338M82 205H418" stroke="#413f30" stroke-width="14"/>
+ <path d="M280 338Q330 195 385 338" fill="#4e6048"/>
+ <text x="30" y="385" fill="#524735" font-size="15">家 / the word that stays</text>`,
+ `<rect width="500" height="400" fill="#d8d1c2"/>
+ <rect x="75" y="40" width="350" height="320" fill="none" stroke="#3e4637" stroke-width="9"/>
+ <rect x="115" y="80" width="270" height="240" fill="none" stroke="#b3342b" stroke-width="2"/>
+ <path d="M0 400L250 150 500 400" fill="#aeb5a0"/>
+ <circle cx="250" cy="195" r="48" fill="#b3342b"/>`
+];
+const archives=[
+ {
+ type:"CURATORIAL MEETING / TRANSCRIPT 01",
+ text:`<b>ELENA / INTERNATIONAL MARKETING LEAD</b>
+ “Red is immediately recognizable. It communicates Chinese identity without explanation.”
+ <b>LIN / CHINESE CURATOR</b>“But why must everything about China be red?”
+ <b>ELENA</b>“Because audiences need something familiar.”
+ <b>LIN</b>“Familiar to whom?”`,
+ cn:"红色容易被识别，但这种熟悉感来自谁的经验？这一段对话表明双方存在分歧，却不足以解释展览为什么延期。"
+ },
+ {
+ type:"EMAIL EXCHANGE / ARCHIVE 02",
+ text:`<b>FROM: INTERNATIONAL MARKETING DEPARTMENT</b>
+ We appreciate the artistic value of these photographs. However, international visitors may struggle to identify their connection to Chinese culture.
+ <b>REPLY: LIN</b>
+ Must Chinese identity always be represented through traditional symbols? Isn't contemporary urban life also part of Chinese culture?
+ <b>ATTACHMENT NOTE</b>
+ A metro carriage. An office tower. A late-night convenience store. The interpretive labels remain under discussion.`,
+ cn:"地铁、写字楼、便利店也是当代中国。双方对“中国文化应当如何被识别”有不同期待，但没有证据说明这些作品被取消。"
+ },
+ {
+ type:"AUDIENCE TEST / ARCHIVE 03",
+ text:`<b>VISITOR A</b>“I thought Jianghu just meant a martial arts world.”
+ <b>VISITOR B</b>“After making choices in the installation, I understood it as a world of relationships, obligations, and moral decisions.”
+ <b>VISITOR C</b>“I didn't understand the word at first. But that made me curious.”
+ <b>FACILITATOR NOTE</b>
+ Some visitors explored. Others left before finding the optional guide. Curiosity alone did not guarantee access.`,
+ cn:"陌生感可以激发探索，也可能使观众离开。关键是：观众有没有找到进入文化语境的工具？这份测试记录指向下一次完整会议。"
+ },
+ {
+ type:"FULL MEETING / ARCHIVE 04",
+ text:`<b>ELENA</b>
+ “I don't want to simplify Chinese culture. I'm worried that we're asking visitors to understand something without giving them the tools to do so.”
+ <b>LIN</b>
+ “When every image comes with a definition, the artwork becomes an illustration of the label.”
+ <b>ELENA</b>
+ “Then let the explanation be optional. But make the option visible.”
+ <b>PRODUCTION NOTE</b>
+ The opening was paused while interpretation was revised. The archive contains no evidence of a political cancellation. Sponsorship concerns focused on visitor engagement.`,
+ cn:"真正的分歧浮现：一方担心文化被简化，另一方担心观众缺乏理解工具。双方都想维护展览质量，却没有充分理解彼此的顾虑。"
+ },
+ {
+ type:"ARTIST VOICE NOTE / TEXT TRANSCRIPTION 05",
+ text:`<b>CHEN / ARTIST</b>
+ “My grandmother calls this place jia. If the label only says ‘home,’ something is lost. But if it only says 家, some visitors have no way in.”
+ <b>PROPOSED INTERPRETATION</b>
+ Keep the original word. Offer a short invitation. Let visitors choose whether to hear the family story, explore the translation, or simply sit with the image.
+ <b>JOINT CURATORIAL NOTE</b>
+ Keep the works intact. Create layered interpretation. The final exhibition now needs a visitor-facing design decision.`,
+ cn:"保留“家”的原词，提供简短入口，再让观众自行选择是否深入。作品的开放性与传播的可及性，可以通过分层设计同时获得支持。"
+ }
+];
+function header(g=false){
+ return `<header><div class="logo">${g?"MERIDIAN.":"ARTLINE↗"}
+ <small>${g?"GALLERY / DIGITAL PROGRAMME":"INTERNATIONAL ART & CULTURE FORUM"}</small></div>
+ <nav><button onclick="go('forum')">Forum</button>
+ <button onclick="go('gallery')">Exhibition ↗</button>
+ <button onclick="chinese=!chinese;render()">${chinese?"中文解读 ON":"中文解读 OFF"}</button></nav></header>`;
+}
+function go(p){page=p;render();window.scrollTo(0,0)}
+function locked(i){
+ return i===3&&!state.read.includes(2)
+ ||i===4&&!state.read.includes(3)
+ ||i===5&&state.read.length<5;
+}
+function render(){
+ if(page==="forum"){
+ $("app").innerHTML=header()+`
+ <main>
+ <section class="hero">
+ <div class="eyebrow">THE UNFINISHED EXHIBITION / AN INTERACTIVE STORY</div>
+ <h1>Every exhibition<br>has a story.<br><em>This one is missing.</em></h1>
+ <p class="lead">A Chinese art exhibition was announced. The doors never opened.
+ Somewhere between the rumors and the missing artworks, there is a story waiting to be understood.</p>
+ ${chinese?'<p class="lead">一场迟迟没有开放的中国艺术展。几条传言、缺失的展品，以及尚未被读完的对话。</p>':""}
+ </section>
+ <div class="rule"><span>COMMUNITY / EXHIBITIONS & DISCUSSIONS</span><span>CASE FILE 026</span></div>
+ <div class="forum-layout">
+ <article class="thread">
+ <div class="thread-title"><div class="eyebrow">● PINNED DISCUSSION</div>
+ <h2>What happened to the Chinese exhibition at the Meridian Gallery?</h2>
+ <div class="meta">artlover_27 · 13 OCT · 4 replies</div></div>
+ <div class="post"><b>artlover_27 / ORIGINAL POSTER</b>
+ <p>I remember seeing the announcement for <i>Beyond the Red</i> three months ago.
+ It was supposed to open this October.<br><br>
+ But the official website still says “Coming Soon.” Does anyone know what happened?</p></div>
+ <div class="post"><b>museumwanderer</b><p>I heard the Chinese curator and the international team had some disagreements.</p></div>
+ <div class="post"><b>afterimage</b><p>Someone said the artworks were too political. Has anyone actually seen a source?</p></div>
+ <div class="post"><b>paperplanes</b><p>I heard the sponsors weren't happy with the concept. Just a rumor, though.</p></div>
+ <div class="post"><b>archive_visitor</b><p>The online preview is still accessible. But half of the artworks are missing. Maybe the answers are in the exhibition itself.</p></div>
+ <button class="cta" onclick="go('gallery')"><span>Access exhibition preview</span><span>↗</span></button>
+ </article>
+ <aside><section><h3>EXHIBITION WATCH</h3>
+ <div class="poster">BEYOND<br>THE RED</div>
+ <p>${state.open?"The exhibition is now open.":"Opening date unconfirmed."}</p></section>
+ <section><h3>A NOTE FOR EXPLORERS</h3>
+ <p>Rumors are not evidence.<br>Open the preview. Look closely.<br>Read what was left behind.</p>
+ <p>${state.read.length} / 5 archives recovered</p></section>
+ <section><h3>ABOUT</h3><p>A fictional interactive case. All characters, institutions and records are invented. Artwork illustrations are original.</p></section></aside>
+ </div></main>
+ <footer>ARTLINE / DIGITAL CURATING × CROSS-CULTURAL DIALOGUE</footer>`;
+ }else{
+ $("app").innerHTML=`<div class="gallery">${header(true)}
+ <main><section class="intro">
+ <div class="eyebrow">${state.open?"THE EXHIBITION IS NOW OPEN":"ONLINE PREVIEW / AN EXHIBITION IN PROGRESS"}</div>
+ <h1>BEYOND<br>THE <span style="color:var(--red)">RED</span></h1>
+ <p><i>Contemporary China Beyond Familiar Symbols</i></p>
+ <p class="lead">Art, memory, technology, and everyday life. An invitation to look beyond familiar symbols and encounter the diverse realities of contemporary China.</p>
+ ${chinese?'<p class="lead">点击展品，找回档案。理解这场分歧，完成这场展览。</p>':""}
+ </section>
+ <div class="rule"><span style="color:var(--red)">● EXHIBITION STATUS: ${state.open?"OPEN":"INCOMPLETE"}</span>
+ <span>${state.read.length} / 5 ARCHIVES RECOVERED</span></div>
+ <section class="grid">${works.map((w,i)=>`
+ <button class="art ${locked(i)?"locked":""}" onclick="openWork(${i})">
+ <div class="picture">
+ <svg viewBox="0 0 500 400" role="img" aria-label="${w[0]}">${images[i]}</svg>
+ <span class="label">${locked(i)?"◌ ARCHIVE LOCKED":state.read.includes(i)?"✓ ARCHIVE RECOVERED":i===5?"FINAL DECISION ↗":"RECOVER ARCHIVE ↗"}</span></div>
+ <div class="number">WORK / 0${i+1}</div>
+ <h3>${w[0]}</h3><p>${w[1]}</p></button>`).join("")}</section>
+ ${state.open?`<div class="quote">“Understanding a culture does not mean making it familiar. It means being willing to encounter what is unfamiliar.”
+ <small>理解一种文化，不意味着把它变成熟悉的模样，而是愿意面对它的陌生之处。<br>The exhibition is complete. The conversation remains open.</small></div>`:""}
+ <button class="reset" onclick="askReset()">Restart this experience / 重新开始</button>
+ </main><footer>MERIDIAN / FICTIONAL DIGITAL EXHIBITION</footer></div>`;
+ }
+}
+function modal(type,title,content){
+ const d=$("dialog");
+ d.innerHTML=`<div class="modal-head"><span>${type}</span>
+ <button class="close" aria-label="关闭" onclick="document.getElementById('dialog').close()">×</button></div>
+ <h2>${title}</h2>${content}`;
+ if(!d.open)d.showModal();
+}
+function openWork(i){
+ if(locked(i)){
+ const hints={
+  3:"Read the audience test in Jianghu.exe to locate the full meeting.",
+  4:"Recover the full meeting in Made in China to find the artist’s voice note.",
+  5:"Recover all five archives before making the final curatorial decision."
+ };
+ modal("ARCHIVE UNAVAILABLE",works[i][0],`<p class="record">${hints[i]}</p>`);
+ return;
+ }
+ if(i===5){decision();return}
+ const a=archives[i];
+ modal(a.type,works[i][0],`
+ <div class="record">${a.text}</div>
+ ${chinese?`<div class="cn">${a.cn}</div>`:""}
+ <button class="action" onclick="recover(${i})">${state.read.includes(i)?"RETURN TO EXHIBITION":"MARK AS READ / RECOVER ARCHIVE"} ↗</button>`);
+}
+function recover(i){
+ if(!state.read.includes(i))state.read.push(i);
+ save();$("dialog").close();render();
+}
+function decision(){
+ modal("FINAL CURATORIAL DECISION / 06","Who gets to define the frame?",`
+ <p class="record">How should the exhibition introduce contemporary Chinese culture to international audiences?</p>
+ <button class="choice" onclick="choose('A')">
+ <strong>A. Familiarity First</strong>
+ <small>Lead with recognizable symbols. Build an immediate connection, while risking a narrower picture of contemporary life.</small></button>
+ <button class="choice" onclick="choose('B')">
+ <strong>B. Authenticity First</strong>
+ <small>Preserve the curator’s original presentation. Protect artistic openness, while leaving some visitors without an entry point.</small></button>
+ <button class="choice" onclick="choose('C')">
+ <strong>C. Dialogue Through Design</strong>
+ <small>Keep cultural complexity. Add optional, layered interpretation and interactive paths for different visitors.</small></button>
+ ${chinese?'<div class="cn">A：熟悉感优先。B：原始表达优先。C：通过设计展开对话。思考哪一种方案能同时回应档案中双方的顾虑。</div>':""}`);
+}
+function choose(choice){
+ if(choice!=="C"){
+ modal("CURATORIAL REVIEW",choice==="A"?"Recognition is an entry point.":"Openness has value.",`
+ <div class="record">${choice==="A"
+ ?"Familiar symbols can help visitors begin. But Lin’s photographs and Chen’s family story ask for room beyond familiarity. How might you offer an entry point without making it the whole exhibition?"
+ :"An artwork need not have one fixed meaning. Yet the audience test shows that some visitors could not find a way in. How might you offer help without prescribing an interpretation?"}</div>
+ <div class="cn">这是一种可以讨论的优先选择，但尚未同时回应双方的顾虑。请重新考虑解释的方式与层次。</div>
+ <button class="action" onclick="decision()">REVISIT THE DECISION ↗</button>`);
+ return;
+ }
+ $("dialog").close();
+ $("app").insertAdjacentHTML("beforeend",`<div class="loading"><p>The conversation becomes an exhibition.</p><small>RECONSTRUCTING EXHIBITION…</small></div>`);
+ setTimeout(()=>{
+ state.open=true;save();render();window.scrollTo(0,0);
+ },1600);
+}
+function askReset(){
+ modal("RESTART EXPERIENCE","Begin with a new perspective?",`
+ <p class="record">This will clear the recovered archives and close the exhibition in this browser.</p>
+ <button class="action" onclick="restart()">重新开始 / RESTART ↗</button>`);
+}
+function restart(){
+ state={read:[],open:false};save();$("dialog").close();go("forum");
+}
+$("dialog").addEventListener("click",e=>{
+ const r=$("dialog").getBoundingClientRect();
+ if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$("dialog").close();
+});
+render();</script>
+</body>
+</html>

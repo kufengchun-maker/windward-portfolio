@@ -65,7 +65,14 @@ function PageBack() { return <a className="page-back" href="#about">← BACK TO 
 function BilibiliEmbed({ project }) { return <section className="case-video case-video--bilibili"><div className="bilibili-embed__top"><span>BILIBILI / VIDEO PREVIEW</span><b>{project.evidence}</b></div><iframe src={project.url} title={`${project.title} 的 Bilibili 视频`} loading="lazy" allow="autoplay; fullscreen" referrerPolicy="no-referrer" /><div className="bilibili-embed__fallback"><span>如播放器未显示，请在 Bilibili 打开原视频。</span><a href={project.url} target="_blank" rel="noreferrer">OPEN IN BILIBILI <Arrow /></a></div></section> }
 function ProfilePage() { return <main className="detail-page profile-page"><header><a className="brand" href="#top">J.Z</a><PageBack /></header><section className="profile-page__hero"><section className="detail-hero"><p>( WHO I AM )</p><h1>JIAN<br /><em>ZHUOFAN.</em></h1><span>VISUAL STORYTELLER / CROSS-CULTURAL OBSERVER / PROJECT LEADER</span></section></section><section className="detail-grid"><div><b>BACKGROUND</b><p>广东工商职业技术大学 · 应用英语专业本科生<br />预计 2027 年毕业</p></div><div><b>MY PRACTICE</b><p>我是一名游走于影像创作、视觉设计、跨文化传播与商业思考之间的青年创作者。我关注人物、虚拟身份、女性经验和异文化生活；先观察人与环境之间的关系，再将它们转化为可被看见、理解和传播的视觉作品。</p></div><div><b>WHAT I WANT TO DO</b><p>我希望继续探索艺术与商业之间的可能性：让视觉不止表达自我，也能够创造交流、影响与价值。申请方向包括艺术、创意媒体、传播、文化管理及艺术与商业交叉专业。</p></div></section></main> }
 function ContactPage() { return <main className="detail-page contact-page"><header><a className="brand" href="#top">J.Z</a><a className="page-back" href="#top">← BACK TO HOME</a></header><section className="contact-page__main"><p>( CONTACT )</p><h1>LET'S<br /><em>TALK.</em></h1><div><a href="mailto:kufengchun@gmail.com"><HoverBounceText text="kufengchun@gmail.com" /></a><a href="https://www.instagram.com/kufengchun8/" target="_blank" rel="noreferrer">INSTAGRAM / kufengchun8 <Arrow /></a><a href="https://www.facebook.com/kufengchun1" target="_blank" rel="noreferrer">FACEBOOK / kufengchun1 <Arrow /></a><a href="https://x.com/kufengchun1" target="_blank" rel="noreferrer">X / kufengchun1 <Arrow /></a></div></section></main> }
-function SketchbookPage() { return <main className="detail-page sketchbook-page"><header><a className="brand" href="#top">J.Z</a><a className="page-back" href="#lab">← BACK TO SKETCHES</a></header><section className="gallery-head"><p>( PERSONAL ARCHIVE )</p><h1>PROCESS<br />TRACES.</h1><span>绘画、版式、手作、混剪与日常视觉实验：不追求完成度，而保留思考发生的痕迹。</span></section><section className="sketchbook-grid"><div>01<br /><b>DRAWING NOTES</b></div><div>02<br /><b>LAYOUT STUDIES</b></div><div>03<br /><b>HANDMADE OBJECTS</b></div><div>04<br /><b>EDITING TESTS</b></div></section></main> }
+function SketchbookPage() { return <main className="detail-page sketchbook-page"><header><a className="brand" href="#top">J.Z</a><a className="page-back" href="#lab">← BACK TO SKETCHES</a></header><section className="gallery-head"><p>( PERSONAL ARCHIVE )</p><h1>PROCESS<br />TRACES.</h1><span>绘画、版式、手作、混剪与日常视觉实验：不追求完成度，而保留思考发生的痕迹。</span></section><section className="sketchbook-grid"><div>01<br /><b>DRAWING NOTES</b></div><div>02<br /><b>LAYOUT STUDIES</b></div><div>03<br /><b>HANDMADE OBJECTS</b></div><a href="#editing-tests">04<span>概念与实验 / EARLY PROTOTYPES ↗</span><b>CONCEPTS &amp;<br />EXPERIMENTS</b></a></section></main> }
+
+function EditingTestsPage() { return <main className="detail-page editing-tests-page"><header><a className="brand" href="#top">J.Z</a><a className="page-back" href="#sketches">← BACK TO PROCESS OVER POLISH</a></header><section className="gallery-head"><p>( PROCESS OVER POLISH / CONCEPT STUDIES )</p><h1>CONCEPTS &amp;<br /><em>EXPERIMENTS.</em></h1><span>概念与实验 / 正在发展的创意</span><p className="concept-intro">从线上展览的想法出发，借助 AI 辅助文本与编程探索网页交互。目前处于概念验证阶段，视觉素材、叙事与互动仍在发展。这里记录想法如何成为可以体验的早期原型。</p></section><section className="editing-tests-projects"><ExhibitionProjects /></section></main> }
+
+function ExhibitionProjects() { return <>
+      <a className="exhibition-card exhibition-card--text" href="#exhibition/broken-mirror"><div><small>01 / EXHIBITION CONCEPT STUDY / 2026</small><span className="concept-status">EARLY PROTOTYPE / 早期原型</span><h3>THE IMPOSSIBLE<br /><em>MENDING.</em></h3><p>破镜重圆：围绕修复、牺牲与无法重圆的线上展览构想，借助 AI 编程将概念转化为网页交互原型。</p><p>当前视觉风格尚在探索；计划通过自主建模或摄影重新制作素材，继续细化展览空间与互动体验。</p><strong>探索早期原型 ↗</strong></div></a>
+      <a className="exhibition-card exhibition-card--text" href="#exhibition/beyond-the-red"><div><small>02 / CROSS-CULTURAL EXHIBITION STUDY / 2026</small><span className="concept-status">EARLY PROTOTYPE / 早期原型</span><h3>BEYOND<br /><em>THE RED.</em></h3><p>未完成的展览：从跨文化理解的主题出发，以 AI 辅助文本为起点，提出网页呈现与交互方向，并借助 AI 编程探索可体验的形式。</p><p>目前保留初步的概念与交互尝试，后续将继续细化文本、视觉语言和观众的参与过程。</p><strong>探索早期原型 ↗</strong></div></a>
+    </> }
 
 const virtualIdentityCases = [
   { no:'01', label:'花 / FLOWERS', meta:'2025.11.13 · 212 LIKES / 17 COMMENTS', image:'/assets/virtual-identities/flower-data.jpg', link:'#series/01', alt:'花，网络发表数据' },
@@ -148,7 +155,7 @@ function App() {
     return () => observer.disconnect()
   }, [route])
   useEffect(() => {
-    const homeRoutes = ['', '#top', '#about', '#work', '#photo', '#proof', '#contact']
+    const homeRoutes = ['', '#top', '#about', '#work', '#photo', '#proof', '#lab', '#contact']
     if (!homeRoutes.includes(route)) return undefined
     setAboutRevealed(false)
     let observer
@@ -190,7 +197,7 @@ function App() {
     return () => { window.removeEventListener('hashchange', changeRoute); window.removeEventListener('pageshow', changeRoute); window.removeEventListener('popstate', changeRoute) }
   }, [])
   useEffect(() => {
-    const homeSections = ['#about', '#work', '#photo', '#proof', '#contact']
+    const homeSections = ['#about', '#work', '#photo', '#proof', '#lab', '#contact']
     const timer = window.setTimeout(() => {
       if (homeSections.includes(route)) document.querySelector(route)?.scrollIntoView({ block: 'start', behavior: 'auto' })
       else window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
@@ -249,6 +256,9 @@ function App() {
   const activeSeries = virtualCollections.find((collection) => collection.id === seriesId)
   if (route === '#about-profile') return <><ProfilePage /><SiteCursor cursor={cursor} overHero={false} active={overImage} /></>
   if (route === '#contact-page') return <><ContactPage /><SiteCursor cursor={cursor} overHero={false} active={overImage} /></>
+  if (route === '#editing-tests') return <EditingTestsPage />
+  if (route === '#exhibition/beyond-the-red') return <main className="exhibition-page"><header><a href="#editing-tests">← BACK TO CONCEPTS &amp; EXPERIMENTS</a><span>EARLY PROTOTYPE · 未完成的展览</span><a href="/exhibitions/beyond-the-red/index.html" target="_blank" rel="noreferrer">全屏原型 ↗</a></header><iframe src="/exhibitions/beyond-the-red/index.html" title="未完成的展览 · Beyond the Red — 早期原型" /></main>
+  if (route === '#exhibition/broken-mirror') return <main className="exhibition-page"><header><a href="#editing-tests">← BACK TO CONCEPTS &amp; EXPERIMENTS</a><span>EARLY PROTOTYPE · 破镜重圆</span><a href="/exhibitions/index.html" target="_blank" rel="noreferrer">全屏原型 ↗</a></header><iframe src="/exhibitions/index.html" title="破镜重圆 — 早期展览原型" allow="autoplay; fullscreen" /></main>
   if (route === '#sketches') return <><SketchbookPage /><SiteCursor cursor={cursor} overHero={false} active={overImage} /></>
   if (route === '#case/feminism') return <><VideoEditingHub /><SiteCursor cursor={cursor} overHero={false} active={overImage} /></>
   if (activeVideoCase) return <><CasePage project={activeVideoCase} /><SiteCursor cursor={cursor} overHero={false} active={overImage} /></>
@@ -321,7 +331,7 @@ function App() {
     </section>
 
     <section className="lab-page page-width reveal-on-scroll" id="lab">
-      <div className="section-tag"><span>( 05 )</span><span>VISUAL LAB</span></div>
+      <div className="section-tag"><span>( 05 )</span><span>OTHER / CREATIVE · 其他 / 创意类</span></div>
       <div className="lab__content"><h2>SKETCHES,<br /><em>NOT FINISHED.</em></h2><div><p>绘画、版式设计、手工作品、混剪练习与日常视觉实验。这些作品不与正式案例混排，而作为持续观察和过程痕迹的档案。</p><p className="placeholder">[ 上传绘画 / 版式 / 手作 / 练习过程 ]</p></div></div>
       <a className="lab-collage" href="#sketches" aria-label="打开个人过程痕迹作品档案"><i /><i /><i /><i /><b>PROCESS<br />OVER<br />POLISH</b></a>
     </section>

@@ -301,3 +301,37 @@ body:has(.flower-carousel__expand:hover) .site-cursor:after{transform:translate(
 /* Keep the underlying homepage typography in its original black ink while
    the collage, red/black signal blocks and TV-noise animation play above it. */
 .site.is-ritual> :not(.creative-easter-egg){filter:none}
+
+.exhibition-page{height:100dvh;display:flex;flex-direction:column;background:#e9e8e3;cursor:auto}
+.exhibition-page>header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 24px;background:#111;color:#eee;font:11px var(--mono)}
+.exhibition-page>header a{cursor:pointer}
+.exhibition-page>iframe{border:0;width:100%;flex:1;min-height:0;background:#e9e8e3}
+.exhibition-card{display:grid;grid-template-columns:1fr 1fr;margin-top:32px;background:#e9e8e3;border:1px solid #b8b6af;overflow:hidden;cursor:pointer}
+.exhibition-card>div:last-child{padding:clamp(28px,5vw,80px);align-self:center}
+.exhibition-card small{font:10px var(--mono);letter-spacing:.08em}
+.exhibition-card h3{font-size:clamp(30px,4vw,68px);font-weight:500;line-height:.96;letter-spacing:-.055em;margin:30px 0}
+.exhibition-card p{font-size:14px;line-height:1.8;max-width:380px}
+.exhibition-card strong{display:block;margin-top:32px;font:12px var(--mono)}
+.exhibition-card__mirror{position:relative;display:grid;place-items:center;min-height:380px;background:#24211f;color:#e9e8e3;overflow:hidden}
+.exhibition-card__mirror i{position:absolute;width:48%;height:78%;border:10px double #8a8173;border-radius:50% 50% 4% 4%;background:linear-gradient(115deg,#9c9990,#33312e 45%,#b5b1a5 46%,#57534d 48%,#282422);transform:rotate(-8deg);transition:transform .6s}
+.exhibition-card__mirror:after{content:'';position:absolute;left:49%;top:10%;height:85%;width:2px;background:#a12525;transform:rotate(18deg)}
+.exhibition-card__mirror span{position:relative;z-index:1;font-family:Georgia,serif;font-size:clamp(48px,6vw,100px);line-height:1.15;letter-spacing:.15em}
+.exhibition-card:hover .exhibition-card__mirror i{transform:rotate(3deg)}
+.exhibition-card__red{position:relative;min-height:380px;background:#b5262d;color:#f1e8dc;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.exhibition-card__red i{position:absolute;inset:13% 17%;border:1px solid #f1e8dc;transform:rotate(-12deg);transition:transform .7s}
+.exhibition-card__red:after{content:'';position:absolute;width:55%;height:140%;background:#171717;right:-24%;top:-20%;transform:rotate(22deg)}
+.exhibition-card__red>span{position:relative;font-family:Georgia,serif;font-size:clamp(44px,5vw,80px);line-height:1.25;letter-spacing:.12em}
+.exhibition-card__red>small{position:relative;margin-top:24px;letter-spacing:.18em}
+.exhibition-card:hover .exhibition-card__red i{transform:rotate(4deg)}
+.sketchbook-grid>a{min-height:310px;background:var(--paper);padding:24px;font:12px var(--mono);display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:background .2s}
+.sketchbook-grid>a:hover,.sketchbook-grid>a:focus-visible{background:var(--acid)}
+.sketchbook-grid>a>span{font:14px var(--sans)}
+.editing-tests-projects{max-width:1400px;margin:0 auto 80px}
+.editing-tests-page .concept-intro{max-width:720px;font:16px/1.9 var(--sans);letter-spacing:0;margin-top:28px;text-transform:none}
+.concept-status{display:block;width:fit-content;margin-top:18px;padding:8px 10px;border:1px solid currentColor;font:10px/1.5 var(--mono);letter-spacing:.05em}
+.exhibition-card--text{display:block;background:transparent;border:0;border-top:1px solid var(--ink);transition:background .2s}
+.exhibition-card--text>div:last-child{padding:36px 24px}
+.exhibition-card--text:hover,.exhibition-card--text:focus-visible{background:#e9e8e3}
+.editing-tests-page .gallery-head h1{font-size:clamp(42px,6vw,100px);letter-spacing:-.04em;line-height:1.2}
+@media(max-width:720px){.sketchbook-grid>a{min-height:190px}}
+@media(max-width:720px){.exhibition-card{grid-template-columns:1fr}.exhibition-card__mirror{min-height:300px}.exhibition-page>header{padding:14px;font-size:10px}.exhibition-page>header>span{display:none}}

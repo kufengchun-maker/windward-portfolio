@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#e9e8e3" />
+  <title>破镜重圆｜实验性线上展览</title>
+  <meta name="description" content="一场关于修复、牺牲与无法重圆的实验性线上展览。" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <canvas id="dust" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <a class="brand" href="#entrance" aria-label="返回入口">
+      <span>破镜</span><i></i><span>重圆</span>
+    </a>
+    <div class="room-indicator"><span id="roomNo">00</span><em>/</em><span>06</span></div>
+    <button class="sound" id="soundToggle" aria-label="开启环境声" aria-pressed="false">
+      <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="sound-label">声音：关</span>
+    </button>
+  </header>
+
+  <aside class="rail" aria-label="展厅导航">
+    <span>入口</span>
+    <div class="rail-line"><i id="railProgress"></i></div>
+    <span>出口</span>
+  </aside>
+
+  <main>
+    <section class="entrance scene" id="entrance" data-room="00">
+      <div class="museum-label reveal">
+        <p>实验性线上展览 · 2026</p>
+        <h1><span>破镜</span><span class="thin">重圆</span></h1>
+        <p class="en">THE IMPOSSIBLE MENDING</p>
+      </div>
+
+      <div class="mirror-stage" id="mirrorStage" aria-label="一面正在被血液缝合的破碎镜子">
+        <div class="mirror-shadow"></div>
+        <div class="western-crown" aria-hidden="true"><i></i><b>✦</b><i></i></div>
+        <div class="western-wing wing-left" aria-hidden="true">❧</div>
+        <div class="western-wing wing-right" aria-hidden="true">❧</div>
+        <div class="mirror-frame">
+          <div class="mirror-surface">
+            <!-- 图片预留层：后续可给每个 .image-shard 设置 background-image -->
+            <div class="image-shard image-shard-1"><span>IMAGE 01</span></div>
+            <div class="image-shard image-shard-2"><span>IMAGE 02</span></div>
+            <div class="image-shard image-shard-3"><span>IMAGE 03</span></div>
+            <div class="image-shard image-shard-4"><span>IMAGE 04</span></div>
+            <div class="image-shard image-shard-5"><span>IMAGE 05</span></div>
+            <div class="image-shard image-shard-6"><span>IMAGE 06</span></div>
+            <div class="image-shard image-shard-7"><span>IMAGE 07</span></div>
+            <div class="image-shard image-shard-8"><span>IMAGE 08</span></div>
+            <svg class="cracks" viewBox="0 0 380 540" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M192 0L181 91l32 51-27 64 8 76-52 56 44 44-35 158"/>
+              <path d="M188 205L104 168 41 177M193 280l79-48 76 13M143 338l-72 19-49 56M186 382l67 17 78 75M181 91l-71-37M213 142l91-70"/>
+            </svg>
+            <div class="blood-line b1"></div><div class="blood-line b2"></div>
+            <div class="blood-drop d1"></div><div class="blood-drop d2"></div>
+            <div class="shard shard-1"></div><div class="shard shard-2"></div>
+            <div class="shard shard-3"></div><div class="shard shard-4"></div>
+            <div class="shard shard-5"></div><div class="shard shard-6"></div>
+          </div>
+        </div>
+        <div class="candelabra" aria-hidden="true">
+          <i class="arm left"></i><i class="arm right"></i><i class="stem"></i>
+          <b class="candle c1">♢</b><b class="candle c2">♢</b><b class="candle c3">♢</b>
+        </div>
+      </div>
+
+      <div class="intro-copy reveal">
+        <p>镜子里面是死去的、<br>逝去的、残缺的、被丢下的。</p>
+        <button class="repair-btn" id="repairBtn"><span>尝试修复</span><i>按住</i></button>
+        <small id="repairHint">每一次修复，都需要有人付出。</small>
+      </div>
+
+      <a class="enter" href="#room-fragments"><span>进入展厅</span><i>↓</i></a>
+    </section>
+
+    <section class="fragment-room scene" id="room-fragments" data-room="01">
+      <div class="section-number">01</div>
+      <div class="section-title reveal">
+        <p>碎片剖面</p><h2>碎片之内</h2><span>INSIDE THE SHARDS</span>
+      </div>
+      <p class="fragment-intro reveal">镜子碎掉以后，里面没有倒影。<br>只有曾被用来黏合它的东西。</p>
+      <div class="fragment-field" aria-label="散落在白色展厅中的镜子碎片">
+        <article class="specimen s1 reveal"><div class="specimen-glass blood-vessel"><i></i><i></i><i></i></div><p><b>01 / 血液</b><span>仍在裂缝里缓慢凝固</span></p></article>
+        <article class="specimen s2 reveal"><div class="specimen-glass remains"><i></i><i></i><i></i></div><p><b>02 / 残骸</b><span>无法辨认属于哪一个人</span></p></article>
+        <article class="specimen s3 reveal"><div class="specimen-glass memory-film"><i></i><i></i></div><p><b>03 / 记忆</b><span>内容缺失，仅余温度</span></p></article>
+        <article class="specimen s4 reveal"><div class="specimen-glass empty-core"><i></i></div><p><b>04 / 空洞</b><span>曾经放置自我的位置</span></p></article>
+        <article class="specimen s5 reveal"><div class="specimen-glass clot"><i></i><i></i></div><p><b>05 / 凝块</b><span>最后一次尝试修复</span></p></article>
+      </div>
+      <div class="clinical-line"><span>WHITE ROOM / 01</span><span>请勿触摸暴露组织</span></div>
+    </section>
+
+    <section class="corridor scene" id="room-1" data-room="02">
+      <div class="walls" aria-hidden="true"><i class="left-wall"></i><i class="right-wall"></i><i class="floor"></i></div>
+      <div class="section-number">02</div>
+      <div class="section-title reveal">
+        <p>第二展厅</p><h2>完整的<br>假象</h2><span>THE ILLUSION OF WHOLENESS</span>
+      </div>
+      <figure class="artwork artwork-one reveal">
+        <div class="portrait-mirror"><span class="faceless"></span><i class="red-seam"></i></div>
+        <figcaption><b>《在裂缝被看见以前》</b><span>混合媒介 / 无期限</span></figcaption>
+      </figure>
+      <p class="wall-text reveal">远看，它仍然完整。<br>只有走近的人，才能看见<br>维持完整所付出的代价。</p>
+    </section>
+
+    <section class="dark-room scene" id="room-2" data-room="03">
+      <div class="section-number">03</div>
+      <div class="section-title reveal">
+        <p>第三展厅</p><h2>镜中<br>遗骸</h2><span>REMAINS IN THE MIRROR</span>
+      </div>
+      <div class="hanging-gallery">
+        <article class="memory-panel p1 reveal"><div class="memory-visual hand"></div><p>记忆 07<br><i>一只没有被握住的手</i></p></article>
+        <article class="memory-panel p2 reveal"><div class="memory-visual room"></div><p>记忆 12<br><i>离开以后仍亮着的房间</i></p></article>
+        <article class="memory-panel p3 reveal"><div class="memory-visual face"></div><p>记忆 19<br><i>两个从未重合的人</i></p></article>
+      </div>
+      <p class="floating-quote">每一块碎片都是真的。<br><em>但它们从未组成同一个真相。</em></p>
+    </section>
+
+    <section class="white-room scene" id="room-3" data-room="04">
+      <div class="section-number">04</div>
+      <div class="section-title reveal">
+        <p>第四展厅</p><h2>维持者</h2><span>THE ONE WHO HOLDS IT TOGETHER</span>
+      </div>
+      <div class="installation reveal">
+        <div class="cloth-body"><i class="head"></i><i class="torso"></i><i class="arm a"></i><i class="arm b"></i></div>
+        <div class="threads" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="suspended-shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="catalog-note reveal"><b>《供体》</b><p>血液、时间、思想、身份</p><span>尺寸随牺牲程度改变</span></div>
+      <p class="wall-statement reveal">他没有修好镜子。<br>他只是让碎片暂时<br><em>没有掉下来。</em></p>
+    </section>
+
+    <section class="collapse-room scene" id="room-4" data-room="05">
+      <div class="section-number">05</div>
+      <div class="section-title reveal"><p>第五展厅</p><h2>承受<br>极限</h2><span>THE LIMIT OF ENDURANCE</span></div>
+      <div class="floor-shards" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="fallen-figure reveal"><i class="fallen-head"></i><i class="fallen-torso"></i><i class="fallen-arm"></i></div>
+      <div class="pulse-copy reveal">
+        <p>流速</p><strong id="pulseNumber">72</strong><span>BPM</span>
+        <small>靠近它，直到声音停止。</small>
+      </div>
+    </section>
+
+    <section class="archive scene" id="room-5" data-room="06">
+      <div class="section-number">06</div>
+      <div class="section-title reveal"><p>第六展厅</p><h2>重圆<br>档案</h2><span>ARCHIVE OF FAILED REPAIRS</span></div>
+      <div class="archive-grid">
+        <article class="archive-card reveal"><span>01</span><div class="mini-mirror m1"></div><h3>亲密关系</h3><p>由沉默黏合</p></article>
+        <article class="archive-card reveal"><span>02</span><div class="mini-mirror m2"></div><h3>家庭</h3><p>由亏欠黏合</p></article>
+        <article class="archive-card reveal"><span>03</span><div class="mini-mirror m3"></div><h3>自我</h3><p>由遗忘黏合</p></article>
+        <article class="archive-card reveal"><span>04</span><div class="mini-mirror m4"></div><h3>理想</h3><p>由时间黏合</p></article>
+      </div>
+    </section>
+
+    <section class="exit-scene scene" id="exit" data-room="06">
+      <div class="exit-question reveal">
+        <span>出口 / EXIT</span>
+        <h2>如果一件事只能靠一个人<br>不断失去自己才能保持完整，</h2>
+        <p>它真的曾经完整过吗？</p>
+      </div>
+      <button class="restart" id="restartBtn">重新进入展览 ↗</button>
+      <footer><span>破镜重圆 · 实验性线上展览</span><span>请不要带走地上的碎片</span></footer>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
